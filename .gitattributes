@@ -1,0 +1,23 @@
+# SPDX-FileCopyrightText: © 2026 Team CharLS
+# SPDX-License-Identifier: BSD-3-Clause
+
+# Set default behavior to automatically normalize line endings.
+* text=auto eol=lf
+
+# Explicitly define text files types.
+*.cpp text diff=cpp
+*.h text diff=cpp
+*.md text
+*.sh text
+*.yml text
+*.cmake text
+
+# Explicitly define binary file types.
+*.jls binary
+*.JLS binary
+*.RAW binary
+
+# Export ignore all files that are only needed for git and CI (used when downloading the repository as a zip file).
+.gitattributes text export-ignore
+.gitignore text export-ignore
+.gitmodules text export-ignore
