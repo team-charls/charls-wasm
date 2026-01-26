@@ -11,3 +11,6 @@ trim_trailing_whitespace = true
 [*.md]
 trim_trailing_whitespace = false # Ending with 2 spaces is used for layout in Markdown
 indent_size = 2
+
+[*.js]
+indent_size = 2
