@@ -3,7 +3,7 @@
 The [original JS build of CharLS](https://github.com/cornerstonejs/charls) 
 was done in 2016 specifically to add JPEG-LS decoding to
 [cornerstonejs](https://github.com/cornerstonejs).  Unfortunately nobody
-picked up maintainence for the original project so it fell behind
+picked up maintenance for the original project so it fell behind
 a major version release of CharLS and never took advantage of
 WASM support that was later added to NodeJS and browsers.
 
@@ -71,6 +71,6 @@ but it may also make sense to copy the pixel data into a canvas image data
 structure or some other javascript structure for performance reasons.
 
 Both the encoder and decoder are designed such that instances can be safely
-reused accross multiple images.  Using the same instance is recommended as
+reused across multiple images.  Using the same instance is recommended as
 it will reuse the same underlying buffers and avoid fragmenting the heap -
 especially for large high resolution images.

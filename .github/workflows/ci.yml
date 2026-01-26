@@ -1,0 +1,33 @@
+# SPDX-FileCopyrightText: © 2026 Team CharLS
+# SPDX-License-Identifier: BSD-3-Clause
+
+name: Build with Emscripten
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 1
+          submodules: recursive
+      
+      - name: Setup Emscripten
+        uses: mymindstorm/setup-emsdk@v14
+        with:
+          version: 4.0.23
+          actions-cache-folder: 'emsdk-cache'
+      
+      - name: Verify Emscripten
+        run: emcc --version
+      
+      - name: Build with CMake
+        run: |
+          emcmake cmake -B build -DCMAKE_BUILD_TYPE=Release -DCHARLS_PEDANTIC_WARNINGS=On -DCHARLS_TREAT_WARNING_AS_ERROR=On
+          emmake make -C build

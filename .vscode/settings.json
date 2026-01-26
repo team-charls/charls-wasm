@@ -76,5 +76,32 @@
         "filesystem": "cpp",
         "memory_resource": "cpp",
         "cinttypes": "cpp"
-    }
+    },
+    "cSpell.words": [
+        "BINDIR",
+        "bitstream",
+        "charls",
+        "charlsjs",
+        "cornerstonejs",
+        "Coverity",
+        "DCHARLS",
+        "DCMAKE",
+        "DICOM",
+        "EMBIND",
+        "emcc",
+        "emcmake",
+        "emmake",
+        "Emscripten",
+        "emsdk",
+        "gitsubmodule",
+        "Hafey",
+        "INCLUDEDIR",
+        "ipch",
+        "jpegls",
+        "mymindstorm",
+        "opendb",
+        "opensdf",
+        "ycbcr",
+        "ycck"
+    ]
 }
