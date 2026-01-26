@@ -1,5 +1,5 @@
-// Copyright (c) Team CharLS.
-// SPDX-License-Identifier: MIT
+// SPDX-FileCopyrightText: © 2020 Chris Hafey, Team CharLS
+// SPDX-License-Identifier: BSD-3-Clause
 
 #pragma once
 
@@ -13,7 +13,7 @@
 /// JavaScript API for decoding JPEG-LS bitstreams with CharLS
 /// </summary>
 class JpegLSDecoder {
-  public: 
+  public:
   /// <summary>
   /// Constructor for decoding a JPEG-LS image from JavaScript.
   /// </summary>
@@ -31,7 +31,7 @@ class JpegLSDecoder {
     encoded_.resize(encodedSize);
     return emscripten::val(emscripten::typed_memory_view(encoded_.size(), encoded_.data()));
   }
-  
+
   /// <summary>
   /// Returns a TypedArray of the buffer allocated in WASM memory space that
   /// holds the decoded pixel data
@@ -48,7 +48,7 @@ class JpegLSDecoder {
   void decode() {
     charls::jpegls_decoder decoder;
     decoder.source(encoded_);
-    
+
     decoder.read_header();
 
     nearLossless_ = decoder.get_near_lossless();

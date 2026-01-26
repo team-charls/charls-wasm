@@ -1,9 +1,9 @@
-// Copyright (c) Team CharLS.
-// SPDX-License-Identifier: MIT
+// SPDX-FileCopyrightText: © 2020 Chris Hafey, Team CharLS
+// SPDX-License-Identifier: BSD-3-Clause
 
 #pragma once
 
-#include <charls/charls.h>
+#include <charls/charls.hpp>
 
 #include <emscripten/val.h>
 
@@ -13,11 +13,11 @@
 /// JavaScript API for encoding images to JPEG-LS bistreams with CharLS
 /// </summary>
 class JpegLSEncoder {
-  public: 
+  public:
   /// <summary>
-  /// Constructor for encoding a JPEG-LS image from JavaScript.  
+  /// Constructor for encoding a JPEG-LS image from JavaScript.
   /// </summary>
-  JpegLSEncoder() : 
+  JpegLSEncoder() :
     interleaveMode_(charls::interleave_mode::none),
     nearLossless_(0) {
   }
@@ -27,12 +27,12 @@ class JpegLSEncoder {
   /// Returns a TypedArray of the buffer allocated in WASM memory space that
   /// will hold the pixel data to be encoded.  JavaScript code needs
   /// to copy the pixel data into the returned TypedArray.  This copy
-  /// operation is needed because WASM runs in a sandbox and cannot access 
+  /// operation is needed because WASM runs in a sandbox and cannot access
   /// data managed by JavaScript
   /// </summary>
   /// <param name="frameInfo">FrameInfo that describes the pixel data to be encoded</param>
   /// <returns>
-  /// TypedArray for the buffer allocated in WASM memory space for the 
+  /// TypedArray for the buffer allocated in WASM memory space for the
   /// source pixel data to be encoded.
   /// </returns>
   emscripten::val getDecodedBuffer(const FrameInfo& frameInfo) {
@@ -42,13 +42,13 @@ class JpegLSEncoder {
     decoded_.resize(decodedSize);
     return emscripten::val(emscripten::typed_memory_view(decoded_.size(), decoded_.data()));
   }
-  
+
   /// <summary>
   /// Returns a TypedArray of the buffer allocated in WASM memory space that
   /// holds the encoded pixel data.
   /// </summary>
   /// <returns>
-  /// TypedArray for the buffer allocated in WASM memory space for the 
+  /// TypedArray for the buffer allocated in WASM memory space for the
   /// encoded pixel data.
   /// </returns>
   emscripten::val getEncodedBuffer() {

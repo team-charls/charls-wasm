@@ -1,5 +1,5 @@
-// Copyright (c) Team CharLS.
-// SPDX-License-Identifier: MIT
+// SPDX-FileCopyrightText: © 2020 Chris Hafey, Team CharLS
+// SPDX-License-Identifier: BSD-3-Clause
 
 #include "JpegLSDecoder.hpp"
 #include "JpegLSEncoder.hpp"
