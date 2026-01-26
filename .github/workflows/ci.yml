@@ -35,6 +35,12 @@ jobs:
       - name: Install Node.js dependencies
         run: npm ci
 
+      - name: Prepare dist artifacts
+        run: |
+          mkdir -p dist
+          cp build/src/charlsjs.js dist/
+          cp build/src/charlsjs.wasm dist/
+
       - name: Run unit tests
         run: npm test
 
