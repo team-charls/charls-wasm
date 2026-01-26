@@ -1,0 +1,19 @@
+# SPDX-FileCopyrightText: © 2026 Team CharLS
+# SPDX-License-Identifier: BSD-3-Clause
+
+version: 2
+
+updates:
+- package-ecosystem: "github-actions"
+  directory: "/"
+  schedule:
+    interval: "weekly"
+    day: "saturday"
+    time: "12:00"    
+
+- package-ecosystem: "gitsubmodule"
+  directory: "/"
+  schedule:
+    interval: "weekly"
+    day: "saturday"
+    time: "12:00"    
