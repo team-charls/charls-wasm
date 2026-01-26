@@ -17,17 +17,29 @@ jobs:
         with:
           fetch-depth: 1
           submodules: recursive
-      
+
       - name: Setup Emscripten
         uses: mymindstorm/setup-emsdk@v14
         with:
           version: 4.0.23
           actions-cache-folder: 'emsdk-cache'
-      
+
       - name: Verify Emscripten
         run: emcc --version
-      
+
       - name: Build with CMake
         run: |
           emcmake cmake -B build -DCMAKE_BUILD_TYPE=Release -DCHARLS_PEDANTIC_WARNINGS=On -DCHARLS_TREAT_WARNING_AS_ERROR=On
           emmake make -C build
+
+      - name: Install Node.js dependencies
+        run: npm ci
+
+      - name: Run unit tests
+        run: npm test
+
+      # - name: Run browser tests (optional)
+      #   run: |
+      #     npm install -g http-server
+      #     http-server test/browser -p 8080 &
+      #     npx playwright test
