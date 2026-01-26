@@ -2,3 +2,4 @@ test/fixtures/MG1.JLS
 test/fixtures/artificial*
 build/*
 build-native/*
+node_modules/
