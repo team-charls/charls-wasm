@@ -1,39 +1,60 @@
-const charls = require('../../dist/charlsjs.js');
+// SPDX-FileCopyrightText: © 2026 Team CharLS
+// SPDX-License-Identifier: BSD-3-Clause
+
+import createCharLSModule from '../../dist/charlsjs.js';
+import charlsJpegLSDecoder from '../../src/JpegLSDecoder.js';
+import fs from 'fs';
+
+let charlsModule;
+
+beforeAll(async () => {
+  charlsModule = await createCharLSModule({
+  });
+});
+
 
 describe('JpegLSDecoder', () => {
   let decoder;
 
-  beforeAll((done) => {
-    charls.onRuntimeInitialized = () => {
-      done();
-    };
-  });
-
   beforeEach(() => {
-    decoder = new charls.JpegLSDecoder();
+    decoder = new charlsJpegLSDecoder(charlsModule);
   });
 
   afterEach(() => {
     if (decoder) {
-      decoder.delete();
+      decoder.dispose();
     }
   });
 
-  test('should create decoder instance', () => {
+  test('should create decoder instance from imported class', () => {
     expect(decoder).toBeDefined();
+    expect(decoder).toBeInstanceOf(charlsJpegLSDecoder);
   });
 
-  // test('should decode valid JPEG-LS image', () => {
-  //   const encodedData = // load test image data
-  //   const buffer = decoder.getEncodedBuffer(encodedData.length);
-  //   buffer.set(encodedData);
+  test('decode', () => {
+    const sourceBuffer = fs.readFileSync('./test/fixtures/jls/CT1.JLS');
+    decoder.setSourceBuffer(sourceBuffer);
+    decoder.readHeader();
+    const destinationSize = decoder.getDestinationSize();
+    expect(destinationSize).toBe(524288);
 
-  //   decoder.decode();
+    const destinationBuffer = decoder.decodeToBuffer(destinationSize);
+    expect(destinationBuffer).toBeDefined();
+    expect(destinationBuffer.length).toBe(destinationSize);
 
-  //   const frameInfo = decoder.getFrameInfo();
-  //   expect(frameInfo.width).toBeGreaterThan(0);
-  //   expect(frameInfo.height).toBeGreaterThan(0);
-  // });
+    // TODO: further validate decoded data
 
-  // Add more tests...
+    const frameInfo = decoder.getFrameInfo();
+    expect(frameInfo).toBeDefined();
+    expect(frameInfo.width).toBe(512);
+    expect(frameInfo.height).toBe(512);
+    expect(frameInfo.bitsPerSample).toBe(16);
+    expect(frameInfo.componentCount).toBe(1);
+
+    const interleaveMode = decoder.getInterleaveMode();
+    expect(interleaveMode).toBe(0); // none
+
+    const nearLossless = decoder.getNearLossless();
+    expect(nearLossless).toBe(0);
+  });
 });
