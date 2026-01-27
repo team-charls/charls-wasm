@@ -1,13 +1,13 @@
-const charls = require('../../dist/charlsjs.js');
+import createCharlsModule from '../../dist/charlsjs.js';
+
+let charls;
+
+beforeAll(async () => {
+  charls = await createCharlsModule();
+});
 
 describe('JpegLSDecoder', () => {
   let decoder;
-
-  beforeAll((done) => {
-    charls.onRuntimeInitialized = () => {
-      done();
-    };
-  });
 
   beforeEach(() => {
     decoder = new charls.JpegLSDecoder();

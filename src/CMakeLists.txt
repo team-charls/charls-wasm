@@ -13,9 +13,19 @@ endif()
 
 set(CMAKE_CXX_FLAGS_RELEASE "-O3")
 
+# Documentation for the Emscripten linker flags:
+# https://emscripten.org/docs/tools_reference/settings_reference.html
+# FILESYSTEM=0: Disable the virtual file system. Default is 1. CharLS doesn't use it.
+# ASSERTIONS=0: Disable runtime assertions. Default is 1, unless -O1 or higher is used.
+#               ASSERTIONS=2 adds extra checks, but may be slow.
+# STACK_OVERFLOW_CHECK (default value is 1 for debug builds, 0 for others): Enable stack overflow checks.
+# MALLOC=emmalloc: Use Emscripten's emmalloc implementation which is optimized for WebAssembly.
+#                  Default is dlmalloc, debug build can use emmalloc-debug
+# ENVIRONMENT = [web, node]: Specify the intended runtime environments. Default is [web, worker, node, shell].
+
 set_target_properties(
-    charlsjs 
-    PROPERTIES 
+    charlsjs
+    PROPERTIES
     LINK_FLAGS "\
       --bind \
       -s NO_EXIT_RUNTIME=1 \
@@ -27,4 +37,7 @@ set_target_properties(
       -s FILESYSTEM=0 \
       -s EXPORTED_FUNCTIONS=[] \
       -s EXPORTED_RUNTIME_METHODS=[ccall] \
+      -s ENVIRONMENT=[web,node] \
+      -s MODULARIZE=1 \
+      -s EXPORT_NAME=createCharlsModule \
    ")
