@@ -38,9 +38,9 @@ describe('JpegLSDecoder', () => {
     const destinationSize = decoder.getDestinationSize();
     expect(destinationSize).toBe(524288);
 
-    const decodedBuffer = decoder.decodeToBuffer(destinationSize);
-    expect(decodedBuffer).toBeDefined();
-    expect(decodedBuffer.length).toBe(destinationSize);
+    const destinationBuffer = decoder.decodeToBuffer(destinationSize);
+    expect(destinationBuffer).toBeDefined();
+    expect(destinationBuffer.length).toBe(destinationSize);
 
     // TODO: further validate decoded data
 
