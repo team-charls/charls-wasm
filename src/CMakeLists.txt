@@ -35,8 +35,8 @@ set_target_properties(
       -s TOTAL_MEMORY=1073741824 \
       -s ASSERTIONS=0 \
       -s FILESYSTEM=0 \
-      -s EXPORTED_FUNCTIONS=[] \
-      -s EXPORTED_RUNTIME_METHODS=[ccall] \
+      -s EXPORTED_FUNCTIONS=['_charls_jpegls_decoder_create','_charls_jpegls_decoder_destroy','_charls_jpegls_decoder_set_source_buffer','_charls_jpegls_decoder_read_spiff_header','_charls_jpegls_decoder_read_header','_charls_jpegls_decoder_get_frame_info','_charls_jpegls_decoder_get_near_lossless','_charls_jpegls_decoder_get_interleave_mode','_charls_jpegls_decoder_get_preset_coding_parameters','_charls_jpegls_decoder_get_color_transformation','_charls_jpegls_decoder_get_destination_size','_charls_jpegls_decoder_decode_to_buffer','_charls_jpegls_encoder_create','_charls_jpegls_encoder_destroy','_charls_jpegls_encoder_set_frame_info','_charls_jpegls_encoder_set_near_lossless','_charls_jpegls_encoder_set_interleave_mode','_charls_jpegls_encoder_set_preset_coding_parameters','_charls_jpegls_encoder_set_color_transformation','_charls_jpegls_encoder_get_estimated_destination_size','_charls_jpegls_encoder_set_destination_buffer','_charls_jpegls_encoder_write_spiff_header','_charls_jpegls_encoder_write_standard_spiff_header','_charls_jpegls_encoder_encode_from_buffer','_charls_jpegls_encoder_get_bytes_written','_charls_jpegls_encoder_rewind','_charls_get_error_message','_malloc','_free'] \
+      -s EXPORTED_RUNTIME_METHODS=['ccall','getValue','setValue','UTF8ToString','HEAPU8'] \
       -s ENVIRONMENT=[web,node] \
       -s MODULARIZE=1 \
       -s EXPORT_NAME=createCharlsModule \

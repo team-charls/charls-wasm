@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: © 2020 Chris Hafey, Team CharLS
+// SPDX-FileCopyrightText: © 2026 Team CharLS
 // SPDX-License-Identifier: BSD-3-Clause
 
 /**
@@ -6,179 +6,138 @@
  * Assumes C API functions are exported from the WASM module
  */
 class JpegLSDecoder {
-  constructor(Module) {
-    this.Module = Module;
-    this.decoder = null;
-    this.encodedBuffer = null;
-    this.encodedBufferPtr = null;
-    this.decodedBuffer = null;
-    this.decodedBufferPtr = null;
-    this.frameInfo = null;
+  #module = null;
+  #decoder = null;
+  #sourceBufferPtr = null;
+  #destinationBufferPtr = null;
+  #ui32Ptr = null;
+  #frameInfoPtr = null;
 
-    // Create decoder instance
-    this.decoder = Module._charls_jpegls_decoder_create();
-    if (!this.decoder) {
-      throw new Error('Failed to create JPEG-LS decoder');
+  constructor(module) {
+    this.#module = module;
+
+    this.#decoder = module._charls_jpegls_decoder_create();
+    if (!this.#decoder) {
+      throw new Error('Failed to create WASM JPEG-LS decoder');
     }
+
+    this.#ui32Ptr = this.#malloc(4);
+    this.#frameInfoPtr = this.#malloc(16); // sizeof(charls_frame_info)
   }
 
+
   /**
-   * Allocates and returns a Uint8Array for the encoded JPEG-LS bitstream
-   * @param {number} size - Size of the encoded buffer in bytes
-   * @returns {Uint8Array} TypedArray view of the allocated WASM memory
+   * Cleans up and frees all allocated memory
+   * Must be called when done using the decoder
    */
-  getEncodedBuffer(size) {
-    // Free previous buffer if it exists
-    if (this.encodedBufferPtr) {
-      this.Module._free(this.encodedBufferPtr);
+  dispose() {
+    if (this.#destinationBufferPtr) {
+      this.#module._free(this.#destinationBufferPtr);
+      this.#destinationBufferPtr = null;
+    }
+
+    if (this.#sourceBufferPtr) {
+      this.#module._free(this.#sourceBufferPtr);
+      this.#sourceBufferPtr = null;
+    }
+
+    this.#module._free(this.#frameInfoPtr);
+    this.#frameInfoPtr = null;
+    this.#module._free(this.#ui32Ptr);
+    this.#ui32Ptr = null;
+    this.#module._charls_jpegls_decoder_destroy(this.#decoder);
+    this.#decoder = null;
+  }
+
+
+  setSourceBuffer(source) {
+    if (this.#sourceBufferPtr) {
+      this.#module._free(this.#sourceBufferPtr);
     }
 
     // Allocate new buffer in WASM memory
-    this.encodedBufferPtr = this.Module._malloc(size);
-    if (!this.encodedBufferPtr) {
+    this.#sourceBufferPtr = this.#module._malloc(source.length);
+    if (!this.#sourceBufferPtr) {
       throw new Error('Failed to allocate encoded buffer');
     }
 
     // Create a Uint8Array view
-    this.encodedBuffer = new Uint8Array(
-      this.Module.HEAPU8.buffer,
-      this.encodedBufferPtr,
-      size
+    let sourceBuffer = new Uint8Array(
+      this.#module.HEAPU8.buffer,
+      this.#sourceBufferPtr,
+      source.length
     );
 
-    return this.encodedBuffer;
+    // Copy source data into the allocated buffer
+    sourceBuffer.set(source);
+
+    this.#checkError(this.#module._charls_jpegls_decoder_set_source_buffer(
+      this.#decoder,
+      this.#sourceBufferPtr,
+      sourceBuffer.length
+    ));
   }
 
-  /**
-   * Returns a Uint8Array view of the decoded pixel data
-   * Must be called after decode()
-   * @returns {Uint8Array} TypedArray view of the decoded pixels
-   */
-  getDecodedBuffer() {
-    if (!this.decodedBuffer) {
-      throw new Error('No decoded buffer available. Call decode() first.');
-    }
-    return this.decodedBuffer;
+
+  readHeader() {
+    this.#checkError(this.#module._charls_jpegls_decoder_read_header(this.#decoder));
   }
 
-  /**
-   * Decodes the JPEG-LS bitstream
-   * The encoded buffer must be populated before calling this method
-   */
-  decode() {
-    if (!this.encodedBuffer) {
-      throw new Error('No encoded buffer set. Call getEncodedBuffer() first.');
-    }
 
-    // Set source buffer
-    let error = this.Module._charls_jpegls_decoder_set_source_buffer(
-      this.decoder,
-      this.encodedBufferPtr,
-      this.encodedBuffer.length
+  getDestinationSize() {
+    this.#checkError(this.#module._charls_jpegls_decoder_get_destination_size(
+      this.#decoder,
+      0,
+      this.#ui32Ptr
+    ));
+
+    return this.#module.getValue(this.#ui32Ptr, 'i32');
+  }
+
+
+  decodeToBuffer(destinationSize) {
+    if (this.#destinationBufferPtr) {
+      this.#module._free(this.#destinationBufferPtr);
+    }
+    this.#destinationBufferPtr = this.#malloc(destinationSize);
+
+    // Decode to buffer
+    this.#checkError(this.#module._charls_jpegls_decoder_decode_to_buffer(
+      this.#decoder,
+      this.#destinationBufferPtr,
+      destinationSize,
+      0
+    ));
+
+    // Create Uint8Array view of decoded data (no copy)
+    const destinationBuffer = new Uint8Array(
+      this.#module.HEAPU8.buffer,
+      this.#destinationBufferPtr,
+      destinationSize
     );
-    this._checkError(error, 'Failed to set source buffer');
 
-    // Read header
-    error = this.Module._charls_jpegls_decoder_read_header(this.decoder);
-    this._checkError(error, 'Failed to read header');
-
-    // Get frame info
-    const frameInfoPtr = this.Module._malloc(16); // sizeof(charls_frame_info)
-    try {
-      error = this.Module._charls_jpegls_decoder_get_frame_info(
-        this.decoder,
-        frameInfoPtr
-      );
-      this._checkError(error, 'Failed to get frame info');
-
-      // Read frame info struct
-      this.frameInfo = {
-        width: this.Module.getValue(frameInfoPtr, 'i32'),
-        height: this.Module.getValue(frameInfoPtr + 4, 'i32'),
-        bitsPerSample: this.Module.getValue(frameInfoPtr + 8, 'i32'),
-        componentCount: this.Module.getValue(frameInfoPtr + 12, 'i32')
-      };
-    } finally {
-      this.Module._free(frameInfoPtr);
-    }
-
-    // Get near lossless parameter (component 0)
-    const nearLosslessPtr = this.Module._malloc(4);
-    try {
-      error = this.Module._charls_jpegls_decoder_get_near_lossless(
-        this.decoder,
-        0,
-        nearLosslessPtr
-      );
-      this._checkError(error, 'Failed to get near lossless');
-      this.nearLossless = this.Module.getValue(nearLosslessPtr, 'i32');
-    } finally {
-      this.Module._free(nearLosslessPtr);
-    }
-
-    // Get interleave mode (component 0)
-    const interleaveModePtr = this.Module._malloc(4);
-    try {
-      error = this.Module._charls_jpegls_decoder_get_interleave_mode(
-        this.decoder,
-        0,
-        interleaveModePtr
-      );
-      this._checkError(error, 'Failed to get interleave mode');
-      this.interleaveMode = this.Module.getValue(interleaveModePtr, 'i32');
-    } finally {
-      this.Module._free(interleaveModePtr);
-    }
-
-    // Get destination size
-    const destinationSizePtr = this.Module._malloc(8); // size_t
-    try {
-      error = this.Module._charls_jpegls_decoder_get_destination_size(
-        this.decoder,
-        0,
-        destinationSizePtr
-      );
-      this._checkError(error, 'Failed to get destination size');
-
-      // Read size_t (could be 32 or 64 bit depending on platform)
-      const destinationSize = this.Module.getValue(destinationSizePtr, 'i32');
-
-      // Allocate decoded buffer
-      this.decodedBufferPtr = this.Module._malloc(destinationSize);
-      if (!this.decodedBufferPtr) {
-        throw new Error('Failed to allocate decoded buffer');
-      }
-
-      // Decode to buffer
-      error = this.Module._charls_jpegls_decoder_decode_to_buffer(
-        this.decoder,
-        this.decodedBufferPtr,
-        destinationSize,
-        0
-      );
-      this._checkError(error, 'Failed to decode');
-
-      // Create Uint8Array view of decoded data
-      this.decodedBuffer = new Uint8Array(
-        this.Module.HEAPU8.buffer,
-        this.decodedBufferPtr,
-        destinationSize
-      );
-    } finally {
-      this.Module._free(destinationSizePtr);
-    }
+    return destinationBuffer;
   }
+
 
   /**
    * Returns the frame information
    * @returns {Object} Frame info with width, height, bitsPerSample, componentCount
    */
   getFrameInfo() {
-    if (!this.frameInfo) {
-      throw new Error('No frame info available. Call decode() first.');
-    }
-    return this.frameInfo;
+      this.#checkError(this.#module._charls_jpegls_decoder_get_frame_info(
+        this.#decoder,
+        this.#frameInfoPtr
+      ));
+
+      return Object.freeze({
+        width: this.#module.getValue(this.#frameInfoPtr, 'i32'),
+        height: this.#module.getValue(this.#frameInfoPtr + 4, 'i32'),
+        bitsPerSample: this.#module.getValue(this.#frameInfoPtr + 8, 'i32'),
+        componentCount: this.#module.getValue(this.#frameInfoPtr + 12, 'i32')
+      });
   }
+
 
   /**
    * Returns the interleave mode
@@ -186,62 +145,45 @@ class JpegLSDecoder {
    * @returns {number}
    */
   getInterleaveMode() {
-    if (this.interleaveMode === undefined) {
-      throw new Error('No interleave mode available. Call decode() first.');
-    }
-    return this.interleaveMode;
+    this.#checkError(this.#module._charls_jpegls_decoder_get_interleave_mode(
+      this.#decoder,
+      0,
+      this.#ui32Ptr
+    ));
+    return this.#module.getValue(this.#ui32Ptr, 'i32');
   }
+
 
   /**
    * Returns the NEAR parameter (0 = lossless, > 0 = lossy)
    * @returns {number}
    */
   getNearLossless() {
-    if (this.nearLossless === undefined) {
-      throw new Error('No near lossless value available. Call decode() first.');
-    }
-    return this.nearLossless;
+    this.#checkError(this.#module._charls_jpegls_decoder_get_near_lossless(
+      this.#decoder,
+      0,
+      this.#ui32Ptr
+    ));
+    return this.#module.getValue(this.#ui32Ptr, 'i32');
   }
 
-  /**
-   * Cleans up and frees all allocated memory
-   * Must be called when done using the decoder
-   */
-  delete() {
-    if (this.decodedBufferPtr) {
-      this.Module._free(this.decodedBufferPtr);
-      this.decodedBufferPtr = null;
-      this.decodedBuffer = null;
-    }
 
-    if (this.encodedBufferPtr) {
-      this.Module._free(this.encodedBufferPtr);
-      this.encodedBufferPtr = null;
-      this.encodedBuffer = null;
-    }
-
-    if (this.decoder) {
-      this.Module._charls_jpegls_decoder_destroy(this.decoder);
-      this.decoder = null;
-    }
-  }
-
-  /**
-   * Checks for errors and throws if error code is not success
-   * @private
-   */
-  _checkError(errorCode, message) {
+  #checkError(errorCode) {
     if (errorCode !== 0) { // CHARLS_JPEGLS_ERRC_SUCCESS = 0
-      const errorMessage = this.Module._charls_get_error_message(errorCode);
-      const errorString = errorMessage ?
-        this.Module.UTF8ToString(errorMessage) :
-        `Error code ${errorCode}`;
-      throw new Error(`${message}: ${errorString}`);
+      const errorMessage = this.#module.UTF8ToString(this.#module._charls_get_error_message(errorCode));
+      throw new Error(`errorCode: ${errorMessage}`);
     }
+  }
+
+
+  #malloc(size) {
+    const ptr = this.#module._malloc(size);
+    if (!ptr) {
+      throw new Error('Failed to allocate buffer');
+    }
+    return ptr;
   }
 }
 
-// Export for different module systems
-if (typeof module !== 'undefined' && module.exports) {
-  module.exports = JpegLSDecoder;
-}
+
+export default JpegLSDecoder;
