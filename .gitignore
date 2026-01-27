@@ -3,3 +3,5 @@ test/fixtures/artificial*
 build*/
 node_modules/
 dist/
+test/browser/src/
+test/browser/test/

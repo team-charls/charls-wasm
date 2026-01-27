@@ -1,7 +1,6 @@
 // SPDX-FileCopyrightText: © 2020 Chris Hafey, Team CharLS
 // SPDX-License-Identifier: BSD-3-Clause
 
-#include "JpegLSDecoder.hpp"
 #include "JpegLSEncoder.hpp"
 
 #include <emscripten.h>
@@ -26,18 +25,6 @@ EMSCRIPTEN_BINDINGS(FrameInfo) {
     .field("bitsPerSample", &FrameInfo::bitsPerSample)
     .field("componentCount", &FrameInfo::componentCount)
        ;
-}
-
-EMSCRIPTEN_BINDINGS(JpegLSDecoder) {
-  class_<JpegLSDecoder>("JpegLSDecoder")
-    .constructor<>()
-    .function("getEncodedBuffer", &JpegLSDecoder::getEncodedBuffer)
-    .function("getDecodedBuffer", &JpegLSDecoder::getDecodedBuffer)
-    .function("decode", &JpegLSDecoder::decode)
-    .function("getFrameInfo", &JpegLSDecoder::getFrameInfo)
-    .function("getInterleaveMode", &JpegLSDecoder::getInterleaveMode)
-    .function("getNearLossless", &JpegLSDecoder::getNearLossless)
-   ;
 }
 
 EMSCRIPTEN_BINDINGS(JpegLSEncoder) {
