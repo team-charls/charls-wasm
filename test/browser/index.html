@@ -1,24 +1,30 @@
 <!DOCTYPE HTML>
 
 <html>
-<head>
-    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
-    <script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
-    <script src="../../dist/charlsjs.js"></script>
-    <script type="module">
-      import JpegLSDecoder from '../../src/JpegLSDecoder.js';
 
-      window.JpegLSDecoder = JpegLSDecoder;
-    </script>
+<head>
+  <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+  <script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
+  <script src="../../dist/charlsjs.js"></script>
+  <script type="module">
+    import JpegLSDecoder from '../../src/JpegLSDecoder.js';
+
+    window.JpegLSDecoder = JpegLSDecoder;
+  </script>
 </head>
+
 <body>
-<div class="container">
+  <div class="container">
     <div class="page-header">
-        <h1>JPEG-LS Decoding with WebAssembly (v<span id="version"></span>)</div></h1>
-        <p class="lead">
-          Select an image or drag and drop a JPEG-LS file.  Files dropped here remain local in your browser, they are not uploaded anywhere.
-      </p>
-      <div>
+      <h1>JPEG-LS Decoding with WebAssembly (v<span id="version"></span>)
+    </div>
+    </h1>
+    <p class="lead">
+      Select an image or drag and drop a JPEG-LS file. Files dropped here remain local in your browser, they are not
+      uploaded anywhere.
+    </p>
+    <div>
       <select id="imageSelector">
         <option value="../../test/fixtures/jls/CT1.JLS" selected>CT1</option>
         <option value="../../test/fixtures/jls/CT2.JLS">CT2</option>
@@ -36,7 +42,8 @@
 
       </select>
       <button id="benchmark">Benchmark</button>
-      <label><input id="signed" type="checkbox" value="">Signed Data - check to properly display signed DICOM images</label>
+      <label><input id="signed" type="checkbox" value="">Signed Data - check to properly display signed DICOM
+        images</label>
     </div>
     <div class="row">
       <label><input id="visualizeDeltas" type="checkbox" value="">Visualize Deltas</label>
@@ -74,8 +81,8 @@
       <div class="col-md-12">
         <b>Encoding Parameters</b>
       </div>
-      </div>
-        <div class="row">
+    </div>
+    <div class="row">
       <div class="col-md-12">
         <span>NEAR Parameter: </span><span id="nearParameter">0</span>
         <input type="range" class="custom-range" id="nearParameterRange" min="0" max="100" value="0">
@@ -88,10 +95,10 @@
     </div>
     <hr>
     <div class="row">
-    <div class="col-md-6">
-        <canvas id='myCanvas' width="512" height="512"/>
+      <div class="col-md-6">
+        <canvas id='myCanvas' width="512" height="512" />
+      </div>
     </div>
-  </div>
 </body>
 
 <script type="module">
@@ -109,20 +116,20 @@
     const numPixels = frameInfo.width * frameInfo.height * frameInfo.componentCount;
     let min = pixelData[0];
     let max = pixelData[0];
-    for(let i=0; i < numPixels; i++) {
-      if(pixelData[i] < min) {
+    for (let i = 0; i < numPixels; i++) {
+      if (pixelData[i] < min) {
         min = pixelData[i];
       }
-      if(pixelData[i] > max) {
+      if (pixelData[i] > max) {
         max = pixelData[i];
       }
     }
-    return {min, max};
+    return { min, max };
   }
 
   function getPixelData(frameInfo, decodedBuffer, signed) {
-    if(frameInfo.bitsPerSample > 8) {
-      if(signed) {
+    if (frameInfo.bitsPerSample > 8) {
+      if (signed) {
         return new Int16Array(decodedBuffer.buffer, decodedBuffer.byteOffset, decodedBuffer.byteLength / 2);
       } else {
         return new Uint16Array(decodedBuffer.buffer, decodedBuffer.byteOffset, decodedBuffer.byteLength / 2);
@@ -138,7 +145,7 @@
     let outOffset = 0;
     let inOffset = 0;
 
-    for(var y=0; y < frameInfo.height; y++) {
+    for (var y = 0; y < frameInfo.height; y++) {
       for (var x = 0; x < frameInfo.width; x++) {
         if (interleaveMode === 0) { // planar (RRRRGGGGBBBB)
           imageData.data[outOffset++] = pixelData[inOffset] >> shift;
@@ -177,7 +184,7 @@
     $('#dynamicRange').text('' + dynamicRange);
     //console.log('dynamicRange=', dynamicRange);
     let bitsOfData = 1;
-    while(dynamicRange > 1) {
+    while (dynamicRange > 1) {
       dynamicRange = dynamicRange >> 1;
       bitsOfData++;
     }
@@ -187,9 +194,9 @@
     //console.log('bitShift=', bitShift);
     //console.log('offset=', offset);
 
-    for(var y=0; y < frameInfo.height; y++) {
+    for (var y = 0; y < frameInfo.height; y++) {
       for (var x = 0; x < frameInfo.width; x++) {
-        if(frameInfo.bitsPerSample <= 8) {
+        if (frameInfo.bitsPerSample <= 8) {
           const value = pixelData[inOffset++];
           imageData.data[outOffset] = value;
           imageData.data[outOffset + 1] = value;
@@ -215,27 +222,27 @@
   }
 
   function deltasToCanvas(frameInfo, pixelData, imageData, signed) {
-    if(!uncompressedImageFrame) {
+    if (!uncompressedImageFrame) {
       return;
     }
     const deltas = new Int32Array(frameInfo.height * frameInfo.width);
     const uif = getPixelData(frameInfo, uncompressedImageFrame, signed);
     let inOffset = 0;
     let outOffset = 0;
-    for(var y=0; y < frameInfo.height; y++) {
+    for (var y = 0; y < frameInfo.height; y++) {
       for (var x = 0; x < frameInfo.width; x++) {
-          const unc = uif[inOffset];
-          const comp = pixelData[inOffset];
-          deltas[inOffset++] = Math.abs(comp - unc);
+        const unc = uif[inOffset];
+        const comp = pixelData[inOffset];
+        deltas[inOffset++] = Math.abs(comp - unc);
       }
     }
     const deltaMinMax = getMinMax(frameInfo, deltas);
     console.log('deltas min/max', deltaMinMax);
     inOffset = 0;
 
-    for(var y=0; y < frameInfo.height; y++) {
+    for (var y = 0; y < frameInfo.height; y++) {
       for (var x = 0; x < frameInfo.width; x++) {
-        if(uncompressedImageFrame) {
+        if (uncompressedImageFrame) {
           const delta = deltas[inOffset];
           inOffset++;
           imageData.data[outOffset] = delta;
@@ -265,10 +272,10 @@
     const visualizeDeltas = $('#visualizeDeltas').is(":checked");
 
 
-    if(frameInfo.componentCount > 1) {
+    if (frameInfo.componentCount > 1) {
       colorToCanvas(frameInfo, pixelData, myImageData, interleaveMode);
     } else {
-      if(visualizeDeltas) {
+      if (visualizeDeltas) {
         deltasToCanvas(frameInfo, pixelData, myImageData, signed);
       } else {
         grayToCanvas(frameInfo, pixelData, myImageData, signed);
@@ -277,7 +284,7 @@
 
     ctx.putImageData(myImageData, 0, 0);
     const end = performance.now();
-    $('#displayTime').text((end-begin).toFixed(2) + ' ms');
+    $('#displayTime').text((end - begin).toFixed(2) + ' ms');
   }
 
   function displayImageAndProperties(decodedBuffer) {
@@ -287,7 +294,7 @@
 
     // Display image properties
     $('#resolution').text('' + frameInfo.width + 'x' + frameInfo.height);
-    $('#pixelFormat').text('' + frameInfo.bitsPerSample +' bpp');
+    $('#pixelFormat').text('' + frameInfo.bitsPerSample + ' bpp');
     $('#componentCount').text('' + frameInfo.componentCount);
     $('#interleaveMode').text('' + interleaveMode);
     $('#nearLossless').text('' + nearLossless);
@@ -303,11 +310,11 @@
     $('#encodedSize').text('' + sourceBuffer.length.toLocaleString() + ' bytes');
 
     const begin = performance.now(); // performance.now() returns value in milliseconds
-    const decodedBuffer = decoder.decode(sourceBuffer);
+    uncompressedImageFrame = decoder.decode(sourceBuffer);
     const end = performance.now();
     $('#decodeTime').text((end - begin).toFixed(2) + ' ms');
 
-    displayImageAndProperties(decodedBuffer);
+    displayImageAndProperties(uncompressedImageFrame);
   }
 
   function decodeBenchmark(iterations = 1) {
@@ -318,18 +325,17 @@
     decoder.setSourceBuffer(sourceBuffer);
 
     // Decode
-    let begin = performance.now(); // performance.now() returns value in milliseconds
-    let decodedBuffer = null
-    for(let i=0; i < iterations; i++) {
+    const begin = performance.now(); // performance.now() returns value in milliseconds
+    for (let i = 0; i < iterations; i++) {
       decoder.reset();
       decoder.readHeader();
       const destinationSize = decoder.getDestinationSize();
-      decodedBuffer = decoder.decodeToBuffer(destinationSize);
+      uncompressedImageFrame = decoder.decodeToBuffer(destinationSize);
     }
-    let end = performance.now();
-    $('#decodeTime').text(((end-begin) / iterations).toFixed(2) + ' ms');
+    const end = performance.now();
+    $('#decodeTime').text(((end - begin) / iterations).toFixed(2) + ' ms');
 
-    displayImageAndProperties(decodedBuffer);
+    displayImageAndProperties(uncompressedImageFrame);
   }
 
   function encode(NEARParameter, iterations = 1) {
@@ -338,46 +344,39 @@
     decodedBytes.set(uncompressedImageFrame);
     encoder.setNearLossless(NEARParameter);
     encoder.setInterleaveMode(interleaveMode)
+
     // Do the encode
     begin = performance.now(); // performance.now() returns value in milliseconds
-    for(let i=0; i < iterations; i++) {
+    for (let i = 0; i < iterations; i++) {
       encoder.encode();
     }
     end = performance.now();
-    $('#encodeTime').text(((end-begin) / iterations).toFixed(2) + ' ms');
+    $('#encodeTime').text(((end - begin) / iterations).toFixed(2) + ' ms');
   }
 
   function load(url) {
-    if(url === '../../test/fixtures/jls/CT1.JLS' ||
+    if (url === '../../test/fixtures/jls/CT1.JLS' ||
       url === '../../test/fixtures/jls/CT2.JLS') {
-        $('#signed').prop('checked', true);
-      } else {
-        $('#signed').prop('checked', false);
-      }
+      $('#signed').prop('checked', true);
+    } else {
+      $('#signed').prop('checked', false);
+    }
 
     fetch(url)
-    .then((response) => {
-      return response.arrayBuffer();
-    })
-    .then((arrayBuffer) => {
-      // {
+      .then((response) => {
+        return response.arrayBuffer();
+      })
+      .then((arrayBuffer) => {
         sourceBuffer = new Uint8Array(arrayBuffer);
         decode();
-        //uncompressedImageFrame = new Uint8Array(decoder.getDecodedBuffer().length);
-        //uncompressedImageFrame.set(decoder.getDecodedBuffer());      //}
-      //catch(ex) {
-      //  $('#status').text('Exception thrown while parsing ' + ex);
-     // }
-    });//.catch(function() {
-      //$//('#status').text('error loading ' + url);
-    //});
+      });
   }
 
   function reset() {
     minMax = undefined;
     const c = document.getElementById("myCanvas");
     const ctx = c.getContext("2d");
-    ctx.fillRect(0,0,c.width, c.height);
+    ctx.fillRect(0, 0, c.width, c.height);
     $('#status').text('');
     $('#encodedSize').text('');
     $('#decodedSize').text('');
@@ -395,29 +394,29 @@
     // Call the global factory function to get the Module
     const charlsModule = await window.createCharLSModule();
 
-    $("#version").text(charlsModule.getVersion())
+    $("#version").text(charlsModule.getVersion());
     decoder = new JpegLSDecoder(charlsModule);
     encoder = new charlsModule.JpegLSEncoder();
 
     load('../../test/fixtures/jls/CT1.JLS');
-    //load('../../test/fixtures/artificial-line.jls');
 
-    $('#imageSelector').change(function(e) {
+    $('#imageSelector').change(function (e) {
       reset();
       load(e.target.options[e.target.selectedIndex].value);
     });
 
-    $('#nearParameterRange').on('input', function(e) {
-      NEARParameter = parseFloat($(this).val());
-      $('#nearParameter').text('' + NEARParameter);
-      encode(NEARParameter);
+    $('#nearParameterRange').on('input', function (e) {
+      const nearLossless = parseFloat($(this).val());
+      $('#nearParameter').text('' + nearLossless);
+      encode(nearLossless);
+
       // Get the encoded bytes and display them
       const encodedBytes = encoder.getEncodedBuffer();
       sourceBuffer = encodedBytes;
       decode();
     });
 
-    $('#benchmark').click(function(e) {
+    $('#benchmark').click(function (e) {
       $('#status').text('Please wait while benchmark runs....');
       setTimeout(() => {
         decodeBenchmark(50)
@@ -425,24 +424,15 @@
       }, 1);
     });
 
-    // set an event handler for the signed checkbox
-    $('#signed').change(function() {
-      console.log('checked toggle')
-      // this will contain a reference to the checkbox
-      if (this.checked) {
-        decode();
-      } else {
-        decode();
-      }
+    // Set an event handler for the signed checkbox
+    $('#signed').change(function () {
+      console.log('signed toggled');
+      decode();
     });
 
-    $('#visualizeDeltas').change(function() {
+    $('#visualizeDeltas').change(function () {
       // this will contain a reference to the checkbox
-      if (this.checked) {
-        decode();
-      } else {
-        decode();
-      }
+      decode();
     });
 
     // this function gets called once the user drops the file onto the div
@@ -458,23 +448,23 @@
 
       var fileReader = new FileReader();
       fileReader.onload = function (e) {
-          var fileAsArrayBuffer = e.target.result;
-          sourceBuffer = new Uint8Array(fileAsArrayBuffer);
-          reset();
-          try {
-            decode();
-          }
-          catch(ex) {
-            $('#status').text('Exception thrown while parsing ' + ex);
-          }
+        var fileAsArrayBuffer = e.target.result;
+        sourceBuffer = new Uint8Array(fileAsArrayBuffer);
+        reset();
+        try {
+          decode();
+        }
+        catch (ex) {
+          $('#status').text('Exception thrown while parsing ' + ex);
+        }
       };
       fileReader.readAsArrayBuffer(file);
     }
 
     function handleDragOver(evt) {
-        evt.stopPropagation();
-        evt.preventDefault();
-        evt.dataTransfer.dropEffect = 'copy'; // Explicitly show this is a copy.
+      evt.stopPropagation();
+      evt.preventDefault();
+      evt.dataTransfer.dropEffect = 'copy'; // Explicitly show this is a copy.
     }
 
     // Setup the dnd listeners.
@@ -482,13 +472,14 @@
     dropZone.addEventListener('dragover', handleDragOver, false);
     dropZone.addEventListener('drop', handleFileSelect, false);
 
-    $('#download').click(function() {
-      // download the de-identified DICOM P10 byte stream
-      var blob = new Blob([sourceBuffer], {type: "image/jls"});
+    $('#download').click(function () {
+      // Download the de-identified DICOM P10 byte stream
+      var blob = new Blob([sourceBuffer], { type: "image/jls" });
       var url = window.URL.createObjectURL(blob);
       window.open(url);
       window.URL.revokeObjectURL(url);
     });
   })();
 </script>
+
 </html>
