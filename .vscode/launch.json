@@ -4,6 +4,15 @@
     {
       "type": "node",
       "request": "launch",
+      "name": "Debug Node Test",
+      "program": "${workspaceFolder}/test/node/index.js",
+      "console": "integratedTerminal",
+      "internalConsoleOptions": "neverOpen",
+      "cwd": "${workspaceFolder}/test/node"
+    },
+    {
+      "type": "node",
+      "request": "launch",
       "name": "Debug Jest decoder.test.js",
       "program": "${workspaceFolder}/node_modules/jest/bin/jest.js",
       "args": [
