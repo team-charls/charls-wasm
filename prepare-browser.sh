@@ -8,6 +8,7 @@
 
 cp ./dist/charlsjs.js ./test/browser/dist/
 cp ./dist/charlsjs.wasm ./test/browser/dist/
-cp ./dist/JpegLSDecoder.js ./test/browser/dist/
-cp ./dist/JpegLSEncoder.js ./test/browser/dist/
+cp ./dist/jpegls-decoder.js ./test/browser/dist/
+cp ./dist/jpegls-encoder.js ./test/browser/dist/
 cp ./dist/package.json ./test/browser/dist/
+cp ./test/fixtures/*.jls ./test/browser/test/fixtures/

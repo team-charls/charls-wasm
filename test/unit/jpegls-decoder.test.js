@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: BSD-3-Clause
 
 import createCharLSModule from '../../dist/charlsjs.js';
-import JpegLSDecoder from '../../dist/JpegLSDecoder.js';
+import JpegLSDecoder from '../../dist/jpegls-decoder.js';
 import fs from 'fs';
 
 let charlsModule;
@@ -32,7 +32,7 @@ describe('JpegLSDecoder', () => {
   });
 
   test('decode', () => {
-    const sourceBuffer = fs.readFileSync('./test/fixtures/jls/CT2.JLS');
+    const sourceBuffer = fs.readFileSync('./test/fixtures/ct2.jls');
     decoder.setSourceBuffer(sourceBuffer);
     decoder.readHeader();
     const destinationSize = decoder.getDestinationSize();
@@ -42,7 +42,7 @@ describe('JpegLSDecoder', () => {
     expect(destinationBuffer).toBeDefined();
     expect(destinationBuffer.length).toBe(destinationSize);
 
-    const compareBuffer = fs.readFileSync('./test/fixtures/raw/CT2.RAW');
+    const compareBuffer = fs.readFileSync('./test/fixtures/ct2.raw');
     compareBuffers(destinationBuffer, compareBuffer);
 
     const frameInfo = decoder.getFrameInfo();
@@ -60,11 +60,11 @@ describe('JpegLSDecoder', () => {
   });
 
   test('decode with the decode method', () => {
-    const sourceBuffer = fs.readFileSync('./test/fixtures/jls/CT2.JLS');
+    const sourceBuffer = fs.readFileSync('./test/fixtures/ct2.jls');
     const destinationBuffer = decoder.decode(sourceBuffer);
     expect(destinationBuffer).toBeDefined();
 
-    const compareBuffer = fs.readFileSync('./test/fixtures/raw/CT2.RAW');
+    const compareBuffer = fs.readFileSync('./test/fixtures/ct2.raw');
     compareBuffers(destinationBuffer, compareBuffer);
 
     const frameInfo = decoder.getFrameInfo();
@@ -82,7 +82,7 @@ describe('JpegLSDecoder', () => {
   });
 
   test('decode same image twice', () => {
-    const sourceBuffer = fs.readFileSync('./test/fixtures/jls/CT2.JLS');
+    const sourceBuffer = fs.readFileSync('./test/fixtures/ct2.jls');
     decoder.setSourceBuffer(sourceBuffer);
     decoder.readHeader();
     let destinationSize = decoder.getDestinationSize();
@@ -92,7 +92,7 @@ describe('JpegLSDecoder', () => {
     expect(destinationBuffer).toBeDefined();
     expect(destinationBuffer.length).toBe(destinationSize);
 
-    const compareBuffer = fs.readFileSync('./test/fixtures/raw/CT2.RAW');
+    const compareBuffer = fs.readFileSync('./test/fixtures/ct2.raw');
     compareBuffers(destinationBuffer, compareBuffer);
 
     const frameInfo = decoder.getFrameInfo();

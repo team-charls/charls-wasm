@@ -11,7 +11,7 @@ Install this in your JavaScript project using npm:
 
 ```bash
 # NOTE - this is not published yet so won't work yet...
-#npm install --save-dev charls-js 
+#npm install --save-dev charls-js
 ```
 
 ## Usage
@@ -33,31 +33,31 @@ space and finally, delete the decoder instance.
 function decode(jpeglsEncodedBitStream) {
   // Create a decoder instance
   const decoder = new charls.JpegLSDecoder();
-  
+
   // get pointer to the source/encoded bit stream buffer in WASM memory
   // that can hold the encoded bitstream
   const encodedBufferInWASM = decoder.getEncodedBuffer(jpeglsEncodedBitStream.length);
-  
+
   // copy the encoded bitstream into WASM memory buffer
   encodedBufferInWASM.set(jpeglsEncodedBitStream);
-  
+
   // decode it
   decoder.decode();
-  
+
   // get information about the decoded image
   const frameInfo = decoder.getFrameInfo();
   const interleaveMode = decoder.getInterleaveMode();
   const nearLossless = decoder.getNearLossless();
-  
+
   // get the decoded pixels
   const decodedPixelsInWASM = decoder.getDecodedBuffer();
-  
+
   // TODO: do something with the decoded pixels here (e.g. display them)
   // The pixel arrangement for color images varies depending upon the
   // interleaveMode parameter, see documentation in JpegLSDecode::getInterleaveMode()
-  
+
   // delete the instance.  Note that this frees up memory including the
-  // encodedBufferInWASM and decodedPixelsInWASM invalidating them. 
+  // encodedBufferInWASM and decodedPixelsInWASM invalidating them.
   // Do not use either after calling delete!
   decoder.delete();
 }
@@ -67,8 +67,8 @@ decode(jpeglsEncodedBitStream)
 ```
 
 See examples for [browsers](test/browser/index.html) and [nodejs](test/node/index.js).
-Also read the API documentation for [JpegLSDecoder.hpp](src/JpegLSDecoder.hpp) and
-[JpegLSEncoder.hpp](src/JpegLSEncoder.hpp)
+Also read the API documentation for [JpegLSDecoder.js](src/jpegls-decoder.js) and
+[JpegLSEncoder.js](src/jpegls-encoder.js)
 
 ## Building
 

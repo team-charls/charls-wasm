@@ -1,7 +1,7 @@
-test/fixtures/MG1.JLS
-test/fixtures/artificial*
+# SPDX-FileCopyrightText: © 2020 Chris Hafey, Team CharLS
+# SPDX-License-Identifier: BSD-3-Clause
+
 build*/
 node_modules/
 dist/
-test/browser/src/
 test/browser/test/

@@ -14,7 +14,7 @@ function decode(pathToJPEGLSFile, iterations = 1) {
   }
   const decodeDuration = process.hrtime(beginDecode); // hrtime returns seconds/nanoseconds tuple
   const decodeDurationInSeconds = (decodeDuration[0] + (decodeDuration[1] / 1000000000));
-  
+
   // Print out information about the decode
   console.log("Decode of " + pathToJPEGLSFile + " took " + ((decodeDurationInSeconds / iterations * 1000)) + " ms");
   const frameInfo = decoder.getFrameInfo();
@@ -38,7 +38,7 @@ function encode(pathToUncompressedImageFrame, imageFrame, iterations = 1) {
   }
   const encodeDuration = process.hrtime(encodeBegin);
   const encodeDurationInSeconds = (encodeDuration[0] + (encodeDuration[1] / 1000000000));
-  
+
   // print out information about the encode
   console.log("Encode of " + pathToUncompressedImageFrame + " took " + ((encodeDurationInSeconds / iterations * 1000)) + " ms");
   const encodedBytes = encoder.getEncodedBuffer();
@@ -50,10 +50,8 @@ function encode(pathToUncompressedImageFrame, imageFrame, iterations = 1) {
 
 charls.onRuntimeInitialized = async _ => {
 
-  decode('../fixtures/jls/CT1.JLS');
-  decode('../fixtures/jls/CT2.JLS');
-  //decode('../fixtures/jls/MG1.JLS');
-  decode("../../extern/charls/test/lena8b.jls");
+  decode('../fixtures/ct1.jls');
+  decode('../fixtures/ct2.jls');
 
-  encode('../fixtures/raw/CT2.RAW', {width: 512, height: 512, bitsPerSample: 16, componentCount: 1});
+  encode('../fixtures/ct2.raw', {width: 512, height: 512, bitsPerSample: 16, componentCount: 1});
 }

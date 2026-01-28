@@ -13,9 +13,9 @@
 
 ### Decode
 
-* CT1.JLS - 6.38 ms
-* CT2.JLS - 6.20 ms
-* MG1.JLS - 421.32 ms
+* ct1.jls - 6.38 ms
+* ct2.jls - 6.20 ms
+* mg1.jls - 421.32 ms
 
 ### Encode
 
@@ -25,21 +25,21 @@
 
 ### Decode
 
-* CT1.JLS - 6.00 ms
-* CT2.JLS - 6.00 ms
-* MG1.JLS - 370.00 ms
+* ct1.jls - 6.00 ms
+* ct2.jls - 6.00 ms
+* mg1.jls - 370.00 ms
 
 ## Google Chrome 81.0
 
 ### Decode
 
-* CT1.JLS - 7.14 ms
-* CT2.JLS - 7.19 ms
-* MG1.JLS - 463.06 ms
+* ct1.jls - 7.14 ms
+* ct2.jls - 7.19 ms
+* mg1.jls - 463.06 ms
 
 ## Native C++
 
-* CT1.JLS - 3.38 ms
-* CT2.JLS - 3.44 ms
-* MG1.JLS - 227.22 ms
+* ct1.jls - 3.38 ms
+* ct2.jls - 3.44 ms
+* mg1.jls - 227.22 ms
 
