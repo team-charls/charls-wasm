@@ -14,7 +14,6 @@ class JpegLSEncoder {
   #destinationBufferView = null;
   #ui32Ptr = null;
   #frameInfoPtr = null;
-  //#resetNeeded = false;
 
   /**
    * Creates a new JPEG-LS encoder instance
@@ -36,7 +35,7 @@ class JpegLSEncoder {
 
   /**
    * Cleans up and frees all allocated memory.
-   * Must be called when done using the decoder to prevent memory leaks.
+   * Must be called when done using the encoder to prevent memory leaks.
    */
   dispose() {
     if (this.#destinationBufferPtr) {
@@ -70,8 +69,9 @@ class JpegLSEncoder {
 
 
   /**
-   * Encodes a raw image buffer to JPEG-LS format.
-   * @param {Buffer|Uint8Array} sourceBuffer - The raw image data to encode
+   * Encodes an image buffer to JPEG-LS format.
+   * The returned Uint8Array is a view over the internal destination buffer, which remains valid until the next encode call or dispose.
+   * @param {Buffer|Uint8Array} sourceBuffer - The image data to encode
    * @param {number} width - Image width in pixels
    * @param {number} height - Image height in pixels
    * @param {number} bitsPerSample - Bits per sample (e.g., 8 or 16)
@@ -194,9 +194,10 @@ class JpegLSEncoder {
 
 
   /**
-   * Encodes image data from a source buffer.
+   * Encodes image data from a source buffer. The destination buffer must be set up beforehand.
+   * The returned Uint8Array is a view over the internal destination buffer, which remains valid until the next encode call or dispose.
    * @param {Buffer|Uint8Array} sourceBuffer - Image data to encode
-   * @returns {Uint8Array} Encoded JPEG-LS data
+   * @returns {Uint8Array} Encoded JPEG-LS data. This a view over the internal destination buffer.
    * @throws {Error} If encoding fails
    */
   encodeFromBuffer(sourceBuffer) {
@@ -211,7 +212,7 @@ class JpegLSEncoder {
     }
 
     // Create a Uint8Array view
-    let sourceBufferView = new Uint8Array(
+    const sourceBufferView = new Uint8Array(
       this.#module.HEAPU8.buffer,
       this.#sourceBufferPtr,
       sourceBuffer.length
@@ -257,7 +258,7 @@ class JpegLSEncoder {
   #checkError(errorCode) {
     if (errorCode !== 0) { // CHARLS_JPEGLS_ERRC_SUCCESS = 0
       const errorMessage = this.#module.UTF8ToString(this.#module._charls_get_error_message(errorCode));
-      throw new Error(`errorCode: ${errorMessage}`);
+      throw new Error(`errorCode: ${errorCode}, message: ${errorMessage}`);
     }
   }
 

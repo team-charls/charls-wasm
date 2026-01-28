@@ -245,7 +245,7 @@ class JpegLSDecoder {
   #checkError(errorCode) {
     if (errorCode !== 0) { // CHARLS_JPEGLS_ERRC_SUCCESS = 0
       const errorMessage = this.#module.UTF8ToString(this.#module._charls_get_error_message(errorCode));
-      throw new Error(`errorCode: ${errorMessage}`);
+      throw new Error(`errorCode: ${errorCode}, message: ${errorMessage}`);
     }
   }
 

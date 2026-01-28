@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: BSD-3-Clause
 
 import createCharLSModule from '../../dist/charlsjs.js';
-import charlsJpegLSDecoder from '../../src/JpegLSDecoder.js';
+import JpegLSDecoder from '../../src/JpegLSDecoder.js';
 import fs from 'fs';
 
 let charlsModule;
@@ -17,7 +17,7 @@ describe('JpegLSDecoder', () => {
   let decoder;
 
   beforeEach(() => {
-    decoder = new charlsJpegLSDecoder(charlsModule);
+    decoder = new JpegLSDecoder(charlsModule);
   });
 
   afterEach(() => {
@@ -28,7 +28,7 @@ describe('JpegLSDecoder', () => {
 
   test('should create decoder instance from imported class', () => {
     expect(decoder).toBeDefined();
-    expect(decoder).toBeInstanceOf(charlsJpegLSDecoder);
+    expect(decoder).toBeInstanceOf(JpegLSDecoder);
   });
 
   test('decode', () => {
@@ -121,7 +121,7 @@ describe('JpegLSDecoder', () => {
     // Use a manual loop to prevent that Jest hangs if the buffers are not equal
     for (let i = 0; i < actualBuffer.length; i++) {
       if (actualBuffer[i] !== expectedBuffer[i]) {
-        expect(false).toBe(true);
+        expect(actualBuffer[i]).toBe(expectedBuffer[i]);
         break;
       }
     }
