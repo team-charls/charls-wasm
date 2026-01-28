@@ -32,7 +32,7 @@ describe('JpegLSDecoder', () => {
   });
 
   test('decode', () => {
-    const sourceBuffer = fs.readFileSync('./test/fixtures/jls/CT1.JLS');
+    const sourceBuffer = fs.readFileSync('./test/fixtures/jls/CT2.JLS');
     decoder.setSourceBuffer(sourceBuffer);
     decoder.readHeader();
     const destinationSize = decoder.getDestinationSize();
@@ -42,7 +42,8 @@ describe('JpegLSDecoder', () => {
     expect(destinationBuffer).toBeDefined();
     expect(destinationBuffer.length).toBe(destinationSize);
 
-    // TODO: further validate decoded data
+    const compareBuffer = fs.readFileSync('./test/fixtures/raw/CT2.RAW');
+    compareBuffers(destinationBuffer, compareBuffer);
 
     const frameInfo = decoder.getFrameInfo();
     expect(frameInfo).toBeDefined();
@@ -59,11 +60,12 @@ describe('JpegLSDecoder', () => {
   });
 
   test('decode with the decode method', () => {
-    const sourceBuffer = fs.readFileSync('./test/fixtures/jls/CT1.JLS');
+    const sourceBuffer = fs.readFileSync('./test/fixtures/jls/CT2.JLS');
     const destinationBuffer = decoder.decode(sourceBuffer);
     expect(destinationBuffer).toBeDefined();
 
-    // TODO: further validate decoded data
+    const compareBuffer = fs.readFileSync('./test/fixtures/raw/CT2.RAW');
+    compareBuffers(destinationBuffer, compareBuffer);
 
     const frameInfo = decoder.getFrameInfo();
     expect(frameInfo).toBeDefined();
@@ -79,9 +81,8 @@ describe('JpegLSDecoder', () => {
     expect(nearLossless).toBe(0);
   });
 
-
   test('decode same image twice', () => {
-    const sourceBuffer = fs.readFileSync('./test/fixtures/jls/CT1.JLS');
+    const sourceBuffer = fs.readFileSync('./test/fixtures/jls/CT2.JLS');
     decoder.setSourceBuffer(sourceBuffer);
     decoder.readHeader();
     let destinationSize = decoder.getDestinationSize();
@@ -91,7 +92,8 @@ describe('JpegLSDecoder', () => {
     expect(destinationBuffer).toBeDefined();
     expect(destinationBuffer.length).toBe(destinationSize);
 
-    // TODO: further validate decoded data
+    const compareBuffer = fs.readFileSync('./test/fixtures/raw/CT2.RAW');
+    compareBuffers(destinationBuffer, compareBuffer);
 
     const frameInfo = decoder.getFrameInfo();
     expect(frameInfo).toBeDefined();
@@ -112,4 +114,16 @@ describe('JpegLSDecoder', () => {
     expect(destinationBuffer).toBeDefined();
     expect(destinationBuffer.length).toBe(destinationSize);
   });
+
+  function compareBuffers(actualBuffer, expectedBuffer) {
+    expect(actualBuffer.length).toBe(expectedBuffer.length);
+
+    // Use a manual loop to prevent that Jest hangs if the buffers are not equal
+    for (let i = 0; i < actualBuffer.length; i++) {
+      if (actualBuffer[i] !== expectedBuffer[i]) {
+        expect(false).toBe(true);
+        break;
+      }
+    }
+  }
 });

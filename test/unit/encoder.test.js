@@ -31,85 +31,48 @@ describe('JpegLSEncoder', () => {
     expect(encoder).toBeInstanceOf(charlsJpegLSEncoder);
   });
 
-  // test('decode', () => {
-  //   const sourceBuffer = fs.readFileSync('./test/fixtures/jls/CT1.JLS');
-  //   encoder.setSourceBuffer(sourceBuffer);
-  //   encoder.readHeader();
-  //   const destinationSize = encoder.getDestinationSize();
-  //   expect(destinationSize).toBe(524288);
+  test('encode', () => {
+    const sourceBuffer = fs.readFileSync('./test/fixtures/raw/CT2.RAW');
+    encoder.setFrameInfo(512, 512, 16, 1);
+    encoder.setNearLossless(0);
+    encoder.setInterleaveMode(0); // none
+    encoder.setEncodingOptions(4); // INCLUDE_PC_PARAMETERS_JAI (to allow compare with ct2.jls)
 
-  //   const destinationBuffer = encoder.encodeToBuffer(destinationSize);
-  //   expect(destinationBuffer).toBeDefined();
-  //   expect(destinationBuffer.length).toBe(destinationSize);
+    const destinationSize = encoder.getEstimatedDestinationSize();
+    encoder.createDestinationBuffer(destinationSize);
+    const destinationBuffer = encoder.encodeFromBuffer(sourceBuffer);
 
-  //   // TODO: further validate decoded data
+    const compareBuffer = fs.readFileSync('./test/fixtures/jls/CT2.JLS');
+    compareBuffers(destinationBuffer, compareBuffer);
+  });
 
-  //   const frameInfo = decoder.getFrameInfo();
-  //   expect(frameInfo).toBeDefined();
-  //   expect(frameInfo.width).toBe(512);
-  //   expect(frameInfo.height).toBe(512);
-  //   expect(frameInfo.bitsPerSample).toBe(16);
-  //   expect(frameInfo.componentCount).toBe(1);
+  test('encode with the encode method', () => {
+    const sourceBuffer = fs.readFileSync('./test/fixtures/raw/CT2.RAW');
+    const destinationBuffer = encoder.encode(sourceBuffer, 512, 512, 16, 1, 0, 4, 0);
 
-  //   const interleaveMode = decoder.getInterleaveMode();
-  //   expect(interleaveMode).toBe(0); // none
+    const compareBuffer = fs.readFileSync('./test/fixtures/jls/CT2.JLS');
+    compareBuffers(destinationBuffer, compareBuffer);
+  });
 
-  //   const nearLossless = encoder.getNearLossless();
-  //   expect(nearLossless).toBe(0);
-  // });
+  test('encode twice', () => {
+    const sourceBuffer = fs.readFileSync('./test/fixtures/raw/CT2.RAW');
+    const destinationBuffer0 = encoder.encode(sourceBuffer, 512, 512, 16, 1, 0, 4, 0);
+    const destinationBuffer1 = encoder.encode(sourceBuffer, 512, 512, 16, 1, 0, 4, 0);
 
-  // test('decode with the decode method', () => {
-  //   const sourceBuffer = fs.readFileSync('./test/fixtures/jls/CT1.JLS');
-  //   const destinationBuffer = encoder.encode(sourceBuffer);
-  //   expect(destinationBuffer).toBeDefined();
+    const compareBuffer = fs.readFileSync('./test/fixtures/jls/CT2.JLS');
+    compareBuffers(destinationBuffer0, compareBuffer);
+    compareBuffers(destinationBuffer1, compareBuffer);
+  });
 
-  //   // TODO: further validate decoded data
+  function compareBuffers(actualBuffer, expectedBuffer) {
+    expect(actualBuffer.length).toBe(expectedBuffer.length);
 
-  //   const frameInfo = encoder.getFrameInfo();
-  //   expect(frameInfo).toBeDefined();
-  //   expect(frameInfo.width).toBe(512);
-  //   expect(frameInfo.height).toBe(512);
-  //   expect(frameInfo.bitsPerSample).toBe(16);
-  //   expect(frameInfo.componentCount).toBe(1);
-
-  //   const interleaveMode = decoder.getInterleaveMode();
-  //   expect(interleaveMode).toBe(0); // none
-
-  //   const nearLossless = decoder.getNearLossless();
-  //   expect(nearLossless).toBe(0);
-  // });
-
-
-  // test('decode same image twice', () => {
-  //   const sourceBuffer = fs.readFileSync('./test/fixtures/jls/CT1.JLS');
-  //   decoder.setSourceBuffer(sourceBuffer);
-  //   decoder.readHeader();
-  //   let destinationSize = decoder.getDestinationSize();
-  //   expect(destinationSize).toBe(524288);
-
-  //   let destinationBuffer = decoder.decodeToBuffer(destinationSize);
-  //   expect(destinationBuffer).toBeDefined();
-  //   expect(destinationBuffer.length).toBe(destinationSize);
-
-  //   // TODO: further validate decoded data
-
-  //   const frameInfo = decoder.getFrameInfo();
-  //   expect(frameInfo).toBeDefined();
-  //   expect(frameInfo.width).toBe(512);
-  //   expect(frameInfo.height).toBe(512);
-  //   expect(frameInfo.bitsPerSample).toBe(16);
-  //   expect(frameInfo.componentCount).toBe(1);
-
-  //   decoder.reset();
-
-  //   // Decode again
-  //   decoder.setSourceBuffer(sourceBuffer);
-  //   decoder.readHeader();
-  //   destinationSize = decoder.getDestinationSize();
-  //   expect(destinationSize).toBe(524288);
-
-  //   destinationBuffer = encoder.encodeToBuffer(destinationSize);
-  //   expect(destinationBuffer).toBeDefined();
-  //   expect(destinationBuffer.length).toBe(destinationSize);
-  // });
+    // Use a manual loop to prevent that Jest hangs if the buffers are not equal
+    for (let i = 0; i < actualBuffer.length; i++) {
+      if (actualBuffer[i] !== expectedBuffer[i]) {
+        expect(false).toBe(true);
+        break;
+      }
+    }
+  }
 });

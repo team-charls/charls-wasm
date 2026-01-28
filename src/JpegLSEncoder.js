@@ -11,6 +11,7 @@ class JpegLSEncoder {
   #sourceBufferSize = 0;
   #destinationBufferPtr = null;
   #destinationBufferSize = 0;
+  #destinationBufferView = null;
   #ui32Ptr = null;
   #frameInfoPtr = null;
   //#resetNeeded = false;
@@ -58,21 +59,50 @@ class JpegLSEncoder {
 
 
   /**
-   * Resets the decoder state to allow decoding another frame.
-   * @throws {Error} If decoder recreation fails
+   * Rewind the encoder to encode a new frame with the same parameters.
+   * @throws {Error} If rewind operation fails
    */
-  // reset() {
-  //   if (this.#resetNeeded) {
-  //     this.#module._charls_jpegls_decoder_destroy(this.#decoder);
-  //     this.#decoder = this.#module._charls_jpegls_decoder_create();
-  //     if (!this.#decoder) {
-  //       throw new Error('Failed to create WASM JPEG-LS decoder');
-  //     }
-  //     this.#resetNeeded = false;
-  //   }
-  // }
+  rewind() {
+    this.#checkError(this.#module._charls_jpegls_encoder_rewind(
+      this.#encoder
+    ));
+  }
 
 
+  /**
+   * Encodes a raw image buffer to JPEG-LS format.
+   * @param {Buffer|Uint8Array} sourceBuffer - The raw image data to encode
+   * @param {number} width - Image width in pixels
+   * @param {number} height - Image height in pixels
+   * @param {number} bitsPerSample - Bits per sample (e.g., 8 or 16)
+   * @param {number} componentCount - Number of color components (1 for grayscale, 3 for RGB, etc.)
+   * @param {number} [interleaveMode=0] - Interleave mode (0=none, 1=line, 2=sample)
+   * @param {number} [encodingOptions=0] - Encoding options bitmask
+   * @param {number} [nearLossless=0] - NEAR parameter (0=lossless, >0=lossy)
+   * @returns {Uint8Array} Encoded JPEG-LS data
+   * @throws {Error} If encoding fails
+   */
+  encode(sourceBuffer, width, height, bitsPerSample, componentCount, interleaveMode = 0, encodingOptions = 0, nearLossless = 0) {
+    this.rewind();
+    this.setFrameInfo(width, height, bitsPerSample, componentCount);
+    this.setInterleaveMode(interleaveMode);
+    this.setEncodingOptions(encodingOptions);
+    this.setNearLossless(nearLossless);
+
+    const destinationSize = this.getEstimatedDestinationSize();
+    this.createDestinationBuffer(destinationSize);
+    return this.encodeFromBuffer(sourceBuffer);
+  }
+
+
+  /**
+   * Sets the frame information (image dimensions and sample format).
+   * @param {number} width - Image width in pixels
+   * @param {number} height - Image height in pixels
+   * @param {number} bitsPerSample - Bits per sample (e.g., 8 or 16)
+   * @param {number} componentCount - Number of color components, 1 for grayscale, 3 for RGB, etc.
+   * @throws {Error} If frame info cannot be set
+   */
   setFrameInfo(width, height, bitsPerSample, componentCount) {
     this.#module.setValue(this.#frameInfoPtr, width, 'i32');
     this.#module.setValue(this.#frameInfoPtr + 4, height, 'i32');
@@ -87,34 +117,49 @@ class JpegLSEncoder {
 
 
   /**
-   * Sets the interleave mode
-   * 0 = none (planar), 1 = line, 2 = sample
-   * @returns {number}
+   * Sets the NEAR parameter for lossy encoding (0 = lossless, > 0 = lossy).
+   * @param {number} nearLossless - NEAR value (0 for lossless, 1-255 for lossy)
+   * @throws {Error} If NEAR value cannot be set
    */
-  setInterleaveMode(interleaveMode) {
-    this.#module.setValue(this.#ui32Ptr, interleaveMode, 'i32');
-
-    this.#checkError(this.#module._charls_jpegls_encoder_set_interleave_mode(
+  setNearLossless(nearLossless) {
+    this.#checkError(this.#module._charls_jpegls_encoder_set_near_lossless(
       this.#encoder,
-      this.#ui32Ptr
+      nearLossless
     ));
   }
 
 
   /**
-   * Sets the NEAR parameter (0 = lossless, > 0 = lossy)
-   * @returns {number}
+   * Sets the interleave mode for multi-component images.
+   * @param {number} interleaveMode - 0 = none (planar), 1 = line, 2 = sample
+   * @throws {Error} If interleave mode cannot be set
    */
-  setNearLossless(nearLossless) {
-    this.#module.setValue(this.#ui32Ptr, nearLossless, 'i32');
-
-    this.#checkError(this.#module._charls_jpegls_encoder_set_near_lossless(
+  setInterleaveMode(interleaveMode) {
+    this.#checkError(this.#module._charls_jpegls_encoder_set_interleave_mode(
       this.#encoder,
-      this.#ui32Ptr
+      interleaveMode
     ));
   }
 
 
+  /**
+   * Sets the encoding options (bitmask for additional encoding parameters).
+   * @param {number} encodingOptions - 0 = none, 1 = EVEN_DESTINATION_SIZE = 1, 2 = INCLUDE_VERSION_NUMBER, 4 = INCLUDE_PC_PARAMETERS_JAI (for JAI compatibility)
+   * @throws {Error} If encoding options cannot be set
+   */
+  setEncodingOptions(encodingOptions) {
+    this.#checkError(this.#module._charls_jpegls_encoder_set_encoding_options(
+      this.#encoder,
+      encodingOptions
+    ));
+  }
+
+
+  /**
+   * Gets the estimated size needed for the encoded output buffer.
+   * @returns {number} Estimated destination buffer size in bytes
+   * @throws {Error} If size cannot be determined
+   */
   getEstimatedDestinationSize() {
     this.#checkError(this.#module._charls_jpegls_encoder_get_estimated_destination_size(
       this.#encoder,
@@ -124,7 +169,12 @@ class JpegLSEncoder {
   }
 
 
-  setDestinationBuffer(destinationSize) {
+  /**
+   * Allocates and sets the destination buffer for encoded data.
+   * @param {number} destinationSize - Size of the destination buffer to allocate
+   * @throws {Error} If buffer allocation or setup fails
+   */
+  createDestinationBuffer(destinationSize) {
     if (this.#destinationBufferPtr === null) {
       this.#destinationBufferPtr = this.#malloc(destinationSize);
       this.#destinationBufferSize = destinationSize;
@@ -135,16 +185,6 @@ class JpegLSEncoder {
       this.#destinationBufferSize = destinationSize;
     }
 
-    // // Create a Uint8Array view
-    // let sourceBufferView = new Uint8Array(
-    //   this.#module.HEAPU8.buffer,
-    //   this.#Destination2BufferPtr,
-    //   sourceBuffer.length
-    // );
-
-    // Copy source data into the allocated buffer
-    //sourceBufferView.set(sourceBuffer);
-
     this.#checkError(this.#module._charls_jpegls_encoder_set_destination_buffer(
       this.#encoder,
       this.#destinationBufferPtr,
@@ -153,6 +193,12 @@ class JpegLSEncoder {
   }
 
 
+  /**
+   * Encodes image data from a source buffer.
+   * @param {Buffer|Uint8Array} sourceBuffer - Image data to encode
+   * @returns {Uint8Array} Encoded JPEG-LS data
+   * @throws {Error} If encoding fails
+   */
   encodeFromBuffer(sourceBuffer) {
     if (this.#sourceBufferPtr === null) {
       this.#sourceBufferPtr = this.#malloc(sourceBuffer.length);
@@ -174,23 +220,31 @@ class JpegLSEncoder {
     // Copy source data into the allocated buffer
     sourceBufferView.set(sourceBuffer);
 
-    this.#checkError(this.#module.charls_jpegls_encoder_encode_from_buffer(
+    this.#checkError(this.#module._charls_jpegls_encoder_encode_from_buffer(
       this.#encoder,
       this.#sourceBufferPtr,
       sourceBuffer.length,
       0
     ));
 
-    //return bytes_written();
+    // Create a Uint8Array view
+    const bytesWritten = this.#getBytesWritten();
+    this.#destinationBufferView = new Uint8Array(
+      this.#module.HEAPU8.buffer,
+      this.#destinationBufferPtr,
+      bytesWritten
+    );
+
+    return this.#destinationBufferView;
   }
 
 
-  encode(sourceBuffer) {
-    //this.reset();
-    // this.setSourceBuffer(sourceBuffer);
-    // this.readHeader();
-    // const destinationSize = this.getDestinationSize();
-    // return this.decodeToBuffer(destinationSize);
+  #getBytesWritten() {
+    this.#checkError(this.#module._charls_jpegls_encoder_get_bytes_written(
+      this.#encoder,
+      this.#ui32Ptr));
+
+    return this.#module.getValue(this.#ui32Ptr, 'i32');
   }
 
 
