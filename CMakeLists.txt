@@ -6,12 +6,15 @@ cmake_minimum_required(VERSION 3.22...4.2)
 project (charlsjs VERSION 0.8.0 LANGUAGES CXX)
 
 set(DIST_DIR "${CMAKE_SOURCE_DIR}/dist")
-
 configure_file(
     ${CMAKE_SOURCE_DIR}/npm/package.json.in
     ${DIST_DIR}/package.json
     @ONLY
 )
+
+# Enable WebAssembly native exception handling. Required for CharLS error handling.
+# Must be set before adding any subdirectory that uses this flag.
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fwasm-exceptions")
 
 # set the build type if not specified
 set(default_build_type "Release")

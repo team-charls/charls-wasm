@@ -24,16 +24,20 @@ set(CMAKE_CXX_FLAGS_RELEASE "-O3")
 # MALLOC=emmalloc: Use Emscripten's emmalloc implementation which is optimized for WebAssembly.
 #                  Default is dlmalloc, debug build can use emmalloc-debug
 # ENVIRONMENT = [web, node]: Specify the intended runtime environments. Default is [web, worker, node, shell].
+# INITIAL_HEAP: Defines the initial size of the WebAssembly memory heap. Default is 16MB.
+# ALLOW_MEMORY_GROWTH=1: Allow the WebAssembly memory to grow at runtime. Default is 0 (disabled).
+# MODULARIZE=1: Generate the code as a module which can be instantiated.
+# EXPORT_NAME=createCharLSModule: Name of the function to create the module instance.
+# EXPORT_ES6=1: Generate the code as an ES6 module.
 
 set_target_properties(
     charlsjs
     PROPERTIES
     LINK_FLAGS "\
-      -s NO_EXIT_RUNTIME=1 \
-      -s DISABLE_EXCEPTION_CATCHING=1 \
+      -fwasm-exceptions \
       -s MALLOC=emmalloc \
       -s ALLOW_MEMORY_GROWTH=1 \
-      -s TOTAL_MEMORY=1073741824 \
+      -s INITIAL_HEAP=262144000 \
       -s ASSERTIONS=0 \
       -s FILESYSTEM=0 \
       -s EXPORTED_FUNCTIONS=['_charls_jpegls_decoder_create','_charls_jpegls_decoder_destroy','_charls_jpegls_decoder_set_source_buffer','_charls_jpegls_decoder_read_header','_charls_jpegls_decoder_get_frame_info','_charls_jpegls_decoder_get_near_lossless','_charls_jpegls_decoder_get_interleave_mode','_charls_jpegls_decoder_get_destination_size','_charls_jpegls_decoder_decode_to_buffer','_charls_jpegls_encoder_create','_charls_jpegls_encoder_destroy','_charls_jpegls_encoder_set_frame_info','_charls_jpegls_encoder_set_near_lossless','_charls_jpegls_encoder_set_interleave_mode','_charls_jpegls_encoder_set_encoding_options','_charls_jpegls_encoder_get_estimated_destination_size','_charls_jpegls_encoder_set_destination_buffer','_charls_jpegls_encoder_encode_from_buffer','_charls_jpegls_encoder_get_bytes_written','_charls_jpegls_encoder_rewind','_charls_get_error_message','_charls_get_version_string','_malloc','_free'] \
@@ -49,5 +53,6 @@ add_custom_command(TARGET charlsjs POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_SOURCE_DIR}/dist
     COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_SOURCE_DIR}/jpegls-decoder.js ${CMAKE_SOURCE_DIR}/dist/
     COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_SOURCE_DIR}/jpegls-encoder.js ${CMAKE_SOURCE_DIR}/dist/
+    COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_SOURCE_DIR}/jpegls-error.js ${CMAKE_SOURCE_DIR}/dist/
     COMMENT "Copying JavaScript wrapper files to dist folder"
 )
