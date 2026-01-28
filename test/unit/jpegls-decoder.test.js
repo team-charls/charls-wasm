@@ -3,6 +3,7 @@
 
 import createCharLSModule from '../../dist/charlsjs.js';
 import JpegLSDecoder from '../../dist/jpegls-decoder.js';
+import JpegLSError from '../../dist/jpegls-error.js';
 import fs from 'fs';
 
 let charlsModule;
@@ -118,6 +119,22 @@ describe('JpegLSDecoder', () => {
   test('get version string', () => {
     const version = decoder.getVersion();
     expect(version).toMatch(/^\d+\.\d+\.\d+$/);
+  });
+
+  test('should throw error when buffer does not contain JPEG start byte', () => {
+    // Create a buffer that does not start with 0xFF 0xD8 (JPEG SOI marker)
+    const invalidBuffer = new Uint8Array([0x00, 0x01, 0x02, 0x03, 0x04]);
+
+    decoder.setSourceBuffer(invalidBuffer);
+
+    try {
+      decoder.readHeader();
+      fail('Expected exception');
+    } catch (error) {
+      expect(error).toBeInstanceOf(JpegLSError);
+      expect(error.message).toMatch(/Invalid JPEG-LS stream.*leading start byte/);
+      expect(error.code).toBe(10);
+    }
   });
 
   function compareBuffers(actualBuffer, expectedBuffer) {

@@ -3,6 +3,7 @@
 
 import createCharLSModule from '../../dist/charlsjs.js';
 import JpegLSEncoder from '../../dist/jpegls-encoder.js';
+import JpegLSError from '../../dist/jpegls-error.js';
 import fs from 'fs';
 
 let charlsModule;
@@ -67,6 +68,17 @@ describe('JpegLSEncoder', () => {
   test('get version string', () => {
     const version = encoder.getVersion();
     expect(version).toMatch(/^\d+\.\d+\.\d+$/);
+  });
+
+  test('should throw error when invalid parameter is provided', () => {
+    try {
+      encoder.setInterleaveMode(99);
+      fail('Expected exception');
+    } catch (error) {
+      expect(error).toBeInstanceOf(JpegLSError);
+      expect(error.message).toMatch(/The interleave mode is not None*/);
+      expect(error.code).toBe(106);
+    }
   });
 
   function compareBuffers(actualBuffer, expectedBuffer) {

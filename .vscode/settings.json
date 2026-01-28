@@ -96,6 +96,7 @@
         "Emscripten",
         "emsdk",
         "ERRC",
+        "fwasm",
         "gitsubmodule",
         "Hafey",
         "HEAPU",

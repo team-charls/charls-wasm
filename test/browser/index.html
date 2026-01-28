@@ -53,7 +53,8 @@
       <label><input id="visualizeDeltas" type="checkbox" value="">Visualize Deltas</label>
     </div>
     <div class="row">
-      <div class="col-md-4">Status:<span id="status"></span></div>
+      <div class="col-md-12">Status: <span id="status"
+          style="word-wrap: break-word; color: red; font-weight: bold;"></span></div>
     </div>
     <div class="row">
       <div class="col-md-4">Encode Time: <span id="encodeTime"></span></div>
@@ -303,6 +304,16 @@
     display(frameInfo, decodedBuffer, interleaveMode);
   }
 
+  function checkedDecode() {
+    try {
+      decode();
+      $('#status').text('');
+    }
+    catch (error) {
+      $('#status').text(error.message);
+    }
+  }
+
   function decode() {
     $('#encodedSize').text('' + sourceBuffer.length.toLocaleString() + ' bytes');
 
@@ -368,7 +379,7 @@
       })
       .then((arrayBuffer) => {
         sourceBuffer = new Uint8Array(arrayBuffer);
-        decode();
+        checkedDecode();
       });
   }
 
@@ -408,8 +419,14 @@
     $('#nearParameterRange').on('input', function (e) {
       const nearLossless = parseFloat($(this).val());
       $('#nearParameter').text('' + nearLossless);
-      sourceBuffer = encode(nearLossless);
-      decode();
+      try {
+        sourceBuffer = encode(nearLossless);
+        decode();
+        $('#status').text('');
+      }
+      catch (error) {
+        $('#status').text(error.message);
+      }
     });
 
     $('#benchmark').click(function (e) {
@@ -423,12 +440,11 @@
     // Set an event handler for the signed checkbox
     $('#signed').change(function () {
       console.log('signed toggled');
-      decode();
+      checkedDecode();
     });
 
     $('#visualizeDeltas').change(function () {
-      // this will contain a reference to the checkbox
-      decode();
+      checkedDecode();
     });
 
     // this function gets called once the user drops the file onto the div
@@ -447,12 +463,7 @@
         const fileAsArrayBuffer = e.target.result;
         sourceBuffer = new Uint8Array(fileAsArrayBuffer);
         reset();
-        try {
-          decode();
-        }
-        catch (ex) {
-          $('#status').text('Exception thrown while parsing ' + ex);
-        }
+        checkedDecode();
       };
       fileReader.readAsArrayBuffer(file);
     }
