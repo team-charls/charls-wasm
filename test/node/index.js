@@ -44,7 +44,6 @@ function decode(pathToJpegLSFile, iterations = 10) {
 function encode(pathToUncompressedImageFrame, imageFrame, iterations = 10) {
   const uncompressedImageFrame = fs.readFileSync(pathToUncompressedImageFrame);
   const encoder = new JpegLSEncoder(charlsModule);
-  encoder.setNearLossless(0);
 
   let destinationBuffer = null;
   const encodeBegin = process.hrtime();
@@ -62,7 +61,7 @@ function encode(pathToUncompressedImageFrame, imageFrame, iterations = 10) {
 
   // print out information about the encode
   console.log("Encode of " + pathToUncompressedImageFrame + " took " + ((encodeDurationInSeconds / iterations * 1000)) + " ms");
-  console.log('  encoded length=', destinationBuffer.length)
+  console.log('  encoded length=', destinationBuffer.length);
 
   // cleanup allocated memory
   encoder.dispose();
