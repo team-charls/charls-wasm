@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: BSD-3-Clause
 
 import createCharLSModule from '../../dist/charlsjs.js';
-import JpegLSEncoder from '../../dist/JpegLSEncoder.js';
+import JpegLSEncoder from '../../dist/jpegls-encoder.js';
 import fs from 'fs';
 
 let charlsModule;
@@ -32,7 +32,7 @@ describe('JpegLSEncoder', () => {
   });
 
   test('encode', () => {
-    const sourceBuffer = fs.readFileSync('./test/fixtures/raw/CT2.RAW');
+    const sourceBuffer = fs.readFileSync('./test/fixtures/ct2.raw');
     encoder.setFrameInfo(512, 512, 16, 1);
     encoder.setNearLossless(0);
     encoder.setInterleaveMode(0); // none
@@ -42,24 +42,24 @@ describe('JpegLSEncoder', () => {
     encoder.createDestinationBuffer(destinationSize);
     const destinationBuffer = encoder.encodeFromBuffer(sourceBuffer);
 
-    const compareBuffer = fs.readFileSync('./test/fixtures/jls/CT2.JLS');
+    const compareBuffer = fs.readFileSync('./test/fixtures/ct2.jls');
     compareBuffers(destinationBuffer, compareBuffer);
   });
 
   test('encode with the encode method', () => {
-    const sourceBuffer = fs.readFileSync('./test/fixtures/raw/CT2.RAW');
+    const sourceBuffer = fs.readFileSync('./test/fixtures/ct2.raw');
     const destinationBuffer = encoder.encode(sourceBuffer, 512, 512, 16, 1, 0, 4, 0);
 
-    const compareBuffer = fs.readFileSync('./test/fixtures/jls/CT2.JLS');
+    const compareBuffer = fs.readFileSync('./test/fixtures/ct2.jls');
     compareBuffers(destinationBuffer, compareBuffer);
   });
 
   test('encode twice', () => {
-    const sourceBuffer = fs.readFileSync('./test/fixtures/raw/CT2.RAW');
+    const sourceBuffer = fs.readFileSync('./test/fixtures/ct2.raw');
     const destinationBuffer0 = encoder.encode(sourceBuffer, 512, 512, 16, 1, 0, 4, 0);
     const destinationBuffer1 = encoder.encode(sourceBuffer, 512, 512, 16, 1, 0, 4, 0);
 
-    const compareBuffer = fs.readFileSync('./test/fixtures/jls/CT2.JLS');
+    const compareBuffer = fs.readFileSync('./test/fixtures/ct2.jls');
     compareBuffers(destinationBuffer0, compareBuffer);
     compareBuffers(destinationBuffer1, compareBuffer);
   });
