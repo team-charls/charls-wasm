@@ -237,6 +237,15 @@ class JpegLSDecoder {
 
 
   /**
+   * Gets the CharLS library version string.
+   * @returns {string} Version string (e.g., "3.0.0")
+   */
+  getVersion() {
+    return this.#module.UTF8ToString(this.#module._charls_get_version_string());
+  }
+
+
+  /**
    * Checks for errors and throws if error code is not success.
    * @private
    * @param {number} errorCode - The error code from a C API function

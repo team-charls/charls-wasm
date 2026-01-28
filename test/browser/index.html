@@ -395,9 +395,9 @@
     // Call the global factory function to get the Module
     const charlsModule = await window.createCharLSModule();
 
-    $("#version").text(charlsModule.getVersion());
     decoder = new JpegLSDecoder(charlsModule);
     encoder = new JpegLSEncoder(charlsModule);
+    $("#version").text(decoder.getVersion());
 
     load('../../test/fixtures/jls/CT1.JLS');
 

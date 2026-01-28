@@ -108,6 +108,7 @@
         "opendb",
         "opensdf",
         "RRRRGGGGBBBB",
+        "STREQUAL",
         "ycbcr",
         "ycck"
     ]

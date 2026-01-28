@@ -1,4 +1,7 @@
-cmake_minimum_required(VERSION 3.16)
+# SPDX-FileCopyrightText: © 2020 Chris Hafey, Team CharLS
+# SPDX-License-Identifier: BSD-3-Clause
+
+cmake_minimum_required(VERSION 3.22...4.2)
 
 project (charlsjs VERSION 0.8.0 LANGUAGES CXX)
 
