@@ -240,6 +240,15 @@ class JpegLSEncoder {
   }
 
 
+  /**
+   * Gets the CharLS library version string.
+   * @returns {string} Version string (e.g., "3.0.0")
+   */
+  getVersion() {
+    return this.#module.UTF8ToString(this.#module._charls_get_version_string());
+  }
+
+
   #getBytesWritten() {
     this.#checkError(this.#module._charls_jpegls_encoder_get_bytes_written(
       this.#encoder,

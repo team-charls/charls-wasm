@@ -115,6 +115,11 @@ describe('JpegLSDecoder', () => {
     expect(destinationBuffer.length).toBe(destinationSize);
   });
 
+  test('get version string', () => {
+    const version = decoder.getVersion();
+    expect(version).toMatch(/^\d+\.\d+\.\d+$/);
+  });
+
   function compareBuffers(actualBuffer, expectedBuffer) {
     expect(actualBuffer.length).toBe(expectedBuffer.length);
 

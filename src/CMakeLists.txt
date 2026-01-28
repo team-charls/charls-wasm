@@ -1,5 +1,7 @@
+# SPDX-FileCopyrightText: © 2020 Chris Hafey, Team CharLS
+# SPDX-License-Identifier: BSD-3-Clause
 
-add_executable(charlsjs jslib.cpp)
+add_executable(charlsjs stub.cpp)
 
 target_link_libraries(charlsjs PRIVATE charls)
 
@@ -27,7 +29,6 @@ set_target_properties(
     charlsjs
     PROPERTIES
     LINK_FLAGS "\
-      --bind \
       -s NO_EXIT_RUNTIME=1 \
       -s DISABLE_EXCEPTION_CATCHING=1 \
       -s MALLOC=emmalloc \
@@ -35,7 +36,7 @@ set_target_properties(
       -s TOTAL_MEMORY=1073741824 \
       -s ASSERTIONS=0 \
       -s FILESYSTEM=0 \
-      -s EXPORTED_FUNCTIONS=['_charls_jpegls_decoder_create','_charls_jpegls_decoder_destroy','_charls_jpegls_decoder_set_source_buffer','_charls_jpegls_decoder_read_header','_charls_jpegls_decoder_get_frame_info','_charls_jpegls_decoder_get_near_lossless','_charls_jpegls_decoder_get_interleave_mode','_charls_jpegls_decoder_get_destination_size','_charls_jpegls_decoder_decode_to_buffer','_charls_jpegls_encoder_create','_charls_jpegls_encoder_destroy','_charls_jpegls_encoder_set_frame_info','_charls_jpegls_encoder_set_near_lossless','_charls_jpegls_encoder_set_interleave_mode','_charls_jpegls_encoder_set_encoding_options','_charls_jpegls_encoder_get_estimated_destination_size','_charls_jpegls_encoder_set_destination_buffer','_charls_jpegls_encoder_encode_from_buffer','_charls_jpegls_encoder_get_bytes_written','_charls_jpegls_encoder_rewind','_charls_get_error_message','_malloc','_free'] \
+      -s EXPORTED_FUNCTIONS=['_charls_jpegls_decoder_create','_charls_jpegls_decoder_destroy','_charls_jpegls_decoder_set_source_buffer','_charls_jpegls_decoder_read_header','_charls_jpegls_decoder_get_frame_info','_charls_jpegls_decoder_get_near_lossless','_charls_jpegls_decoder_get_interleave_mode','_charls_jpegls_decoder_get_destination_size','_charls_jpegls_decoder_decode_to_buffer','_charls_jpegls_encoder_create','_charls_jpegls_encoder_destroy','_charls_jpegls_encoder_set_frame_info','_charls_jpegls_encoder_set_near_lossless','_charls_jpegls_encoder_set_interleave_mode','_charls_jpegls_encoder_set_encoding_options','_charls_jpegls_encoder_get_estimated_destination_size','_charls_jpegls_encoder_set_destination_buffer','_charls_jpegls_encoder_encode_from_buffer','_charls_jpegls_encoder_get_bytes_written','_charls_jpegls_encoder_rewind','_charls_get_error_message','_charls_get_version_string','_malloc','_free'] \
       -s EXPORTED_RUNTIME_METHODS=['getValue','setValue','UTF8ToString','HEAPU8'] \
       -s ENVIRONMENT=[web,node] \
       -s MODULARIZE=1 \

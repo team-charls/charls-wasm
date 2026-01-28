@@ -64,6 +64,11 @@ describe('JpegLSEncoder', () => {
     compareBuffers(destinationBuffer1, compareBuffer);
   });
 
+  test('get version string', () => {
+    const version = encoder.getVersion();
+    expect(version).toMatch(/^\d+\.\d+\.\d+$/);
+  });
+
   function compareBuffers(actualBuffer, expectedBuffer) {
     expect(actualBuffer.length).toBe(expectedBuffer.length);
 
