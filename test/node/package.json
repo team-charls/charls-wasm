@@ -1,13 +1,9 @@
 {
-    "name": "node",
-    "version": "1.0.0",
-    "description": "",
-    "main": "index.js",
-    "scripts": {
-      "test": "node index.js"
-    },
-    "keywords": [],
-    "author": "",
-    "license": "ISC"
+  "name": "node",
+  "type": "module",
+  "private": true,
+  "main": "index.js",
+  "scripts": {
+    "test": "node index.js"
   }
-  
+}
