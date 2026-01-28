@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: BSD-3-Clause
 
 import createCharLSModule from '../../dist/charlsjs.js';
-import JpegLSEncoder from '../../src/JpegLSEncoder.js';
+import JpegLSEncoder from '../../dist/JpegLSEncoder.js';
 import fs from 'fs';
 
 let charlsModule;
