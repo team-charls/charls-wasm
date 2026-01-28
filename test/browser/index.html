@@ -3,14 +3,19 @@
 <html>
 
 <head>
-  <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet"
-    integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
-  <script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
-  <script src="../../dist/charlsjs.js"></script>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"
+    integrity="sha384-1H217gwSVyLSIfaLxHbE7dRb3v4mYCKbpQvzx0cegeju1MVsGrX5xXxAvs/HgeFs"
+    crossorigin="anonymous"></script>></script>
   <script type="module">
-    import JpegLSDecoder from '../../src/JpegLSDecoder.js';
+    import createCharLSModule from '../../dist/charlsjs.js';
+    import JpegLSDecoder from '../../dist/JpegLSDecoder.js';
+    import JpegLSEncoder from '../../dist/JpegLSEncoder.js';
 
+    window.createCharLSModule = createCharLSModule;
     window.JpegLSDecoder = JpegLSDecoder;
+    window.JpegLSEncoder = JpegLSEncoder;
   </script>
 </head>
 
@@ -171,31 +176,26 @@
   }
 
   function grayToCanvas(frameInfo, pixelData, imageData, signed) {
-    var outOffset = 0;
-    var planeSize = frameInfo.width * frameInfo.height;
-    var inOffset = 0;
+    let outOffset = 0;
+    let planeSize = frameInfo.width * frameInfo.height;
+    let inOffset = 0;
 
     minMax = getMinMax(frameInfo, pixelData);
     $('#minPixel').text('' + minMax.min);
     $('#maxPixel').text('' + minMax.max);
 
-    //console.log(minMax);
     let dynamicRange = minMax.max - minMax.min;
     $('#dynamicRange').text('' + dynamicRange);
-    //console.log('dynamicRange=', dynamicRange);
     let bitsOfData = 1;
     while (dynamicRange > 1) {
       dynamicRange = dynamicRange >> 1;
       bitsOfData++;
     }
-    //console.log('bitsOfData = ', bitsOfData);
     let bitShift = bitsOfData - 8;
     const offset = -minMax.min;
-    //console.log('bitShift=', bitShift);
-    //console.log('offset=', offset);
 
-    for (var y = 0; y < frameInfo.height; y++) {
-      for (var x = 0; x < frameInfo.width; x++) {
+    for (let y = 0; y < frameInfo.height; y++) {
+      for (let x = 0; x < frameInfo.width; x++) {
         if (frameInfo.bitsPerSample <= 8) {
           const value = pixelData[inOffset++];
           imageData.data[outOffset] = value;
@@ -229,8 +229,8 @@
     const uif = getPixelData(frameInfo, uncompressedImageFrame, signed);
     let inOffset = 0;
     let outOffset = 0;
-    for (var y = 0; y < frameInfo.height; y++) {
-      for (var x = 0; x < frameInfo.width; x++) {
+    for (let y = 0; y < frameInfo.height; y++) {
+      for (let x = 0; x < frameInfo.width; x++) {
         const unc = uif[inOffset];
         const comp = pixelData[inOffset];
         deltas[inOffset++] = Math.abs(comp - unc);
@@ -240,8 +240,8 @@
     console.log('deltas min/max', deltaMinMax);
     inOffset = 0;
 
-    for (var y = 0; y < frameInfo.height; y++) {
-      for (var x = 0; x < frameInfo.width; x++) {
+    for (let y = 0; y < frameInfo.height; y++) {
+      for (let x = 0; x < frameInfo.width; x++) {
         if (uncompressedImageFrame) {
           const delta = deltas[inOffset];
           inOffset++;
@@ -262,15 +262,14 @@
     const pixelData = getPixelData(frameInfo, decodedBuffer, signed);
 
     const begin = performance.now(); // performance.now() returns value in milliseconds
-    var c = document.getElementById("myCanvas");
-    var ctx = c.getContext("2d");
+    const c = document.getElementById("myCanvas");
+    const ctx = c.getContext("2d");
 
     c.width = frameInfo.width;
     c.height = frameInfo.height;
-    var myImageData = ctx.createImageData(frameInfo.width, frameInfo.height);
+    const myImageData = ctx.createImageData(frameInfo.width, frameInfo.height);
 
     const visualizeDeltas = $('#visualizeDeltas').is(":checked");
-
 
     if (frameInfo.componentCount > 1) {
       colorToCanvas(frameInfo, pixelData, myImageData, interleaveMode);
@@ -338,20 +337,23 @@
     displayImageAndProperties(uncompressedImageFrame);
   }
 
-  function encode(NEARParameter, iterations = 1) {
-    // Setup buffer
-    const decodedBytes = encoder.getDecodedBuffer(frameInfo);
-    decodedBytes.set(uncompressedImageFrame);
-    encoder.setNearLossless(NEARParameter);
-    encoder.setInterleaveMode(interleaveMode)
+  function encode(nearLossless) {
+    const frameInfo = decoder.getFrameInfo();
+    const interleaveMode = decoder.getInterleaveMode();
 
-    // Do the encode
-    begin = performance.now(); // performance.now() returns value in milliseconds
-    for (let i = 0; i < iterations; i++) {
-      encoder.encode();
-    }
-    end = performance.now();
-    $('#encodeTime').text(((end - begin) / iterations).toFixed(2) + ' ms');
+    const begin = performance.now(); // performance.now() returns value in milliseconds
+    const encodedBytes = encoder.encode(
+      uncompressedImageFrame,
+      frameInfo.width,
+      frameInfo.height,
+      frameInfo.bitsPerSample,
+      frameInfo.componentCount,
+      interleaveMode, 0, nearLossless);
+    const end = performance.now();
+
+    $('#encodeTime').text((end - begin).toFixed(2) + ' ms');
+
+    return encodedBytes;
   }
 
   function load(url) {
@@ -396,7 +398,7 @@
 
     $("#version").text(charlsModule.getVersion());
     decoder = new JpegLSDecoder(charlsModule);
-    encoder = new charlsModule.JpegLSEncoder();
+    encoder = new JpegLSEncoder(charlsModule);
 
     load('../../test/fixtures/jls/CT1.JLS');
 
@@ -408,11 +410,7 @@
     $('#nearParameterRange').on('input', function (e) {
       const nearLossless = parseFloat($(this).val());
       $('#nearParameter').text('' + nearLossless);
-      encode(nearLossless);
-
-      // Get the encoded bytes and display them
-      const encodedBytes = encoder.getEncodedBuffer();
-      sourceBuffer = encodedBytes;
+      sourceBuffer = encode(nearLossless);
       decode();
     });
 
@@ -441,14 +439,14 @@
       evt.preventDefault();
 
       // Get the FileList object that contains the list of files that were dropped
-      var files = evt.dataTransfer.files;
+      const files = evt.dataTransfer.files;
 
       // this UI is only built for a single file so just dump the first one
-      var file = files[0];
+      const file = files[0];
 
-      var fileReader = new FileReader();
+      const fileReader = new FileReader();
       fileReader.onload = function (e) {
-        var fileAsArrayBuffer = e.target.result;
+        const fileAsArrayBuffer = e.target.result;
         sourceBuffer = new Uint8Array(fileAsArrayBuffer);
         reset();
         try {
@@ -474,8 +472,8 @@
 
     $('#download').click(function () {
       // Download the de-identified DICOM P10 byte stream
-      var blob = new Blob([sourceBuffer], { type: "image/jls" });
-      var url = window.URL.createObjectURL(blob);
+      const blob = new Blob([sourceBuffer], { type: "image/jls" });
+      const url = window.URL.createObjectURL(blob);
       window.open(url);
       window.URL.revokeObjectURL(url);
     });

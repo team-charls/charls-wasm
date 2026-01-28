@@ -1,6 +1,6 @@
 {
-  "name": "charls",
-  "version": "1.0.0",
+  "name": "charls-wasm-dev",
+  "private": true,
   "description": "WASM Build of CharLS",
   "main": "dist/charlsjs.js",
   "directories": {

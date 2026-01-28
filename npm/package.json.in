@@ -1,0 +1,19 @@
+{
+  "name": "@team-charls/charls-wasm",
+  "version": "@PROJECT_VERSION@",
+  "type": "module",
+  "license": "BSD-3-Clause",
+
+  "exports": {
+    ".": {
+      "browser": "./index.js",
+      "node": "./index.js",
+      "default": "./index.js"
+    }
+  },
+
+  "files": [
+    "*.js",
+    "*.wasm"
+  ]
+}
