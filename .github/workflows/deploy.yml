@@ -1,7 +1,7 @@
 # SPDX-FileCopyrightText: © 2026 Team CharLS
 # SPDX-License-Identifier: BSD-3-Clause
 
-name: Build and Deploy to GitHub Pages
+name: Deploy to GitHub Pages
 
 on:
   push:

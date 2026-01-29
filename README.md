@@ -10,6 +10,7 @@
 
 [![License](https://img.shields.io/badge/License-BSD%203--Clause-blue.svg)](https://raw.githubusercontent.com/team-charls/charls-wasm/main/LICENSE.md)
 [![REUSE status](https://api.reuse.software/badge/github.com/team-charls/charls-wasm)](https://api.reuse.software/info/github.com/team-charls/charls-wasm)
+[![Build and test](https://github.com/team-charls/charls-wasm/actions/workflows/ci.yml/badge.svg)](https://github.com/team-charls/charls-wasm/actions/workflows/ci.yml)
 ![Deploy](https://github.com/team-charls/charls-wasm/actions/workflows/deploy.yml/badge.svg)
 
 CharLS WebAssembly is a WebAssembly build of [CharLS](https://github.com/team-charls/charls)

@@ -1,7 +1,7 @@
 # SPDX-FileCopyrightText: © 2026 Team CharLS
 # SPDX-License-Identifier: BSD-3-Clause
 
-name: Build with Emscripten
+name: Build and test
 on:
   pull_request:
   push:
@@ -43,9 +43,3 @@ jobs:
 
       - name: Run unit tests
         run: npm test
-
-      # - name: Run browser tests (optional)
-      #   run: |
-      #     npm install -g http-server
-      #     http-server test/browser -p 8080 &
-      #     npx playwright test
