@@ -1,9 +1,40 @@
-# charls-js
-JS/WebAssembly build of [CharLS](https://github.com/team-charls/charls)
+<!--
+  SPDX-FileCopyrightText: © 2020 Chris Hafey, Team CharLS
+  SPDX-License-Identifier: BSD-3-Clause
+-->
+
+<img src="https://raw.githubusercontent.com/team-charls/charls-wasm/main/assets/jpeg_ls_logo.png" alt="JPEG-LS Logo" width="100"/>
+<img src="https://raw.githubusercontent.com/team-charls/charls-wasm/main/assets/wasm3_0.png" alt="Wasm Logo" width="100"/>
+
+# CharLS WebAssembly
+
+[![License](https://img.shields.io/badge/License-BSD%203--Clause-blue.svg)](https://raw.githubusercontent.com/team-charls/charls-wasm/main/LICENSE.md)
+[![REUSE status](https://api.reuse.software/badge/github.com/team-charls/charls-wasm)](https://api.reuse.software/info/github.com/team-charls/charls-wasm)
+![Deploy](https://github.com/team-charls/charls-wasm/actions/workflows/deploy.yml/badge.svg)
+
+CharLS WebAssembly is a WebAssembly build of [CharLS](https://github.com/team-charls/charls)
+This project was forked from [charls-js](https://github.com/chafey/charls-js) created by Chris Hafey. It has been updated to use Wasm 3.0 and the latest version of CharLS. Supported environments are browsers and Node.js.
 
 ## Try It Out!
 
-Try it in your browser [here](https://chafey.github.io/charls-js/test/browser/index.html)
+Try it in your browser [here](https://team-charls.github.io/charls-wasm/)
+
+## Supported platforms
+
+All environments that provide support to run Wasm 3.0 modules can use charls-wasm.
+Building charls-wasm itself is only supported on Linux platforms.
+
+### Support Matrix
+
+| Dimension     | Supported Version      | Scope |
+|---------------|------------------------|-------|
+| CharLS        | >= 3.0.0               | Development
+| CMake         | >= 3.22                | Development
+| Emscripten    | >= 4.0.23              | Development
+| Chrome\Edge   | >= 137                 | Usage
+| Firefox       | >= 131                 | Usage
+| Safari        | >= 26.2                | Usage
+| Node.js       | >= 18.0                | Usage
 
 ## Install
 
