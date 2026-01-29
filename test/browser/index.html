@@ -7,11 +7,11 @@
     integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
   <script src="https://code.jquery.com/jquery-3.7.1.min.js"
     integrity="sha384-1H217gwSVyLSIfaLxHbE7dRb3v4mYCKbpQvzx0cegeju1MVsGrX5xXxAvs/HgeFs"
-    crossorigin="anonymous"></script>>
+    crossorigin="anonymous"></script>
   <script type="module">
-    import createCharLSModule from '../../dist/charlsjs.js';
-    import JpegLSDecoder from '../../dist/jpegls-decoder.js';
-    import JpegLSEncoder from '../../dist/jpegls-encoder.js';
+    import createCharLSModule from './dist/charlsjs.js';
+    import JpegLSDecoder from './dist/jpegls-decoder.js';
+    import JpegLSEncoder from './dist/jpegls-encoder.js';
 
     window.createCharLSModule = createCharLSModule;
     window.JpegLSDecoder = JpegLSDecoder;
@@ -31,19 +31,19 @@
     </p>
     <div>
       <select id="imageSelector">
-        <option value="../../test/fixtures/ct1.jls" selected>CT1</option>
-        <option value="../../test/fixtures/ct2.jls">CT2</option>
-        <option value="../../test/fixtures/mg1.jls">MG1</option>
-        <option value="../../test/fixtures/mr1.jls">MR1</option>
-        <option value="../../test/fixtures/mr2.jls">MR2</option>
-        <option value="../../test/fixtures/mr3.jls">MR3</option>
-        <option value="../../test/fixtures/mr4.jls">MR4</option>
-        <option value="../../test/fixtures/nm1.jls">NM1</option>
-        <option value="../../test/fixtures/rg1.jls">RG1</option>
-        <option value="../../test/fixtures/rg2.jls">RG2</option>
-        <option value="../../test/fixtures/rg3.jls">RG3</option>
-        <option value="../../test/fixtures/sc1.jls">SC1</option>
-        <option value="../../test/fixtures/xa1.jls">XA1</option>
+        <option value="test/fixtures/ct1.jls" selected>CT1</option>
+        <option value="test/fixtures/ct2.jls">CT2</option>
+        <option value="test/fixtures/mg1.jls">MG1</option>
+        <option value="test/fixtures/mr1.jls">MR1</option>
+        <option value="test/fixtures/mr2.jls">MR2</option>
+        <option value="test/fixtures/mr3.jls">MR3</option>
+        <option value="test/fixtures/mr4.jls">MR4</option>
+        <option value="test/fixtures/nm1.jls">NM1</option>
+        <option value="test/fixtures/rg1.jls">RG1</option>
+        <option value="test/fixtures/rg2.jls">RG2</option>
+        <option value="test/fixtures/rg3.jls">RG3</option>
+        <option value="test/fixtures/sc1.jls">SC1</option>
+        <option value="test/fixtures/xa1.jls">XA1</option>
       </select>
       <button id="benchmark">Benchmark</button>
       <label><input id="signed" type="checkbox" value="">Signed Data - check to properly display signed DICOM
@@ -366,8 +366,8 @@
   }
 
   function load(url) {
-    if (url === '../../test/fixtures/ct1.jls' ||
-      url === '../../test/fixtures/ct2.jls') {
+    if (url === 'test/fixtures/ct1.jls' ||
+      url === 'test/fixtures/ct2.jls') {
       $('#signed').prop('checked', true);
     } else {
       $('#signed').prop('checked', false);
@@ -409,7 +409,7 @@
     encoder = new JpegLSEncoder(charlsModule);
     $("#version").text(decoder.getVersion());
 
-    load('../../test/fixtures/ct1.jls');
+    load('test/fixtures/ct1.jls');
 
     $('#imageSelector').change(function (e) {
       reset();
