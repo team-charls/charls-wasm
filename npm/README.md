@@ -43,7 +43,7 @@ function decodeImage(sourceBuffer) {
 ```javascript
 import { createJpegLSEncoder } from '@team-charls/charls-wasm';
 
-// Typical pattern is to re-use decoder instances for better performance.
+// Typical pattern is to re-use encoder instances for better performance.
 const encoder = await createJpegLSEncoder();
 
 function encodeImage(sourceBuffer, width, height, bitsPerSample, componentCount) {
