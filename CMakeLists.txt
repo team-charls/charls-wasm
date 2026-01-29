@@ -5,6 +5,7 @@ cmake_minimum_required(VERSION 3.22...4.2)
 
 project (charlsjs VERSION 0.8.0 LANGUAGES CXX)
 
+# The CMake project version is leading: use it to generate package.json
 set(DIST_DIR "${CMAKE_SOURCE_DIR}/dist")
 configure_file(
     ${CMAKE_SOURCE_DIR}/npm/package.json.in
@@ -27,15 +28,9 @@ if(NOT EXISTS "${PROJECT_SOURCE_DIR}/extern/charls/CMakeLists.txt")
     message(FATAL_ERROR "dependency charls is not present, please run: git submodule update --init --recursive")
 endif()
 
-# add the external library
-add_subdirectory(extern/charls EXCLUDE_FROM_ALL)
-
-# add the js wrapper
-if(EMSCRIPTEN)
-  add_subdirectory(src)
-endif()
-
-# c++ native test case
 if(NOT EMSCRIPTEN)
-  add_subdirectory(test/cpp)
+  message(FATAL_ERROR "Emscripten is required to build. Use emcmake cmake ..")
 endif()
+
+add_subdirectory(extern/charls EXCLUDE_FROM_ALL)
+add_subdirectory(src)
