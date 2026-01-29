@@ -3,8 +3,7 @@
   SPDX-License-Identifier: BSD-3-Clause
 -->
 
-<img src="https://raw.githubusercontent.com/team-charls/charls-wasm/main/assets/jpeg_ls_logo.png" alt="JPEG-LS Logo" width="100"/>
-<img src="https://raw.githubusercontent.com/team-charls/charls-wasm/main/assets/webassembly.png" alt="Wasm Logo" width="100"/>
+<img src="https://raw.githubusercontent.com/team-charls/charls-wasm/main/assets/jpeg_ls_logo.png" alt="JPEG-LS Logo" width="100"/> <img src="https://raw.githubusercontent.com/team-charls/charls-wasm/main/assets/webassembly.png" alt="Wasm Logo" width="100" style="margin-left: 20px;"/>
 
 # CharLS WebAssembly
 
@@ -13,8 +12,8 @@
 [![Build and test](https://github.com/team-charls/charls-wasm/actions/workflows/ci.yml/badge.svg)](https://github.com/team-charls/charls-wasm/actions/workflows/ci.yml)
 ![Deploy](https://github.com/team-charls/charls-wasm/actions/workflows/deploy.yml/badge.svg)
 
-CharLS WebAssembly is a WebAssembly build of [CharLS](https://github.com/team-charls/charls)
-This project was forked from [charls-js](https://github.com/chafey/charls-js) created by Chris Hafey. It has been updated to use Wasm 3.0 and the latest version of CharLS. Supported environments are browsers and Node.js.
+CharLS WebAssembly is a WebAssembly build of [CharLS](https://github.com/team-charls/charls).
+This project was originally forked from [charls-js](https://github.com/chafey/charls-js), created by Chris Hafey. It has been updated to use Wasm 3.0 and the latest version of CharLS. Supported environments are browsers and Node.js.
 
 ## Try It Out!
 
@@ -22,7 +21,7 @@ Try it in your browser [here](https://team-charls.github.io/charls-wasm/)
 
 ## Supported platforms
 
-All environments that provide support to run Wasm 3.0 modules can use charls-wasm.
+All environments that can run Wasm 3.0 modules are supported.
 Building charls-wasm itself is only supported on Linux platforms.
 
 ### Support Matrix
