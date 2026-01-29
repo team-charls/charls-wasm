@@ -4,7 +4,7 @@
 -->
 
 <img src="https://raw.githubusercontent.com/team-charls/charls-wasm/main/assets/jpeg_ls_logo.png" alt="JPEG-LS Logo" width="100"/>
-<img src="https://raw.githubusercontent.com/team-charls/charls-wasm/main/assets/wasm3_0.png" alt="Wasm Logo" width="100"/>
+<img src="https://raw.githubusercontent.com/team-charls/charls-wasm/main/assets/webassembly.png" alt="Wasm Logo" width="100"/>
 
 # CharLS WebAssembly
 
