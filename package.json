@@ -1,8 +1,7 @@
 {
   "name": "charls-wasm-dev",
   "private": true,
-  "description": "WASM Build of CharLS",
-  "main": "dist/charlsjs.js",
+  "description": "Development workspace for CharLS WebAssembly - High-performance JPEG-LS codec",
   "directories": {
     "test": "test"
   },
@@ -19,21 +18,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/chafey/charls-js.git"
+    "url": "git+https://github.com/team-charls/charls-wasm.git"
   },
-  "keywords": [
-    "JPEG",
-    "JPEGLS",
-    "CharLS",
-    "JPEG-LS",
-    "DICOM"
-  ],
-  "author": "Chris Hafey <chafey@gmail.com>",
+  "author": "Team CharLS",
   "license": "BSD-3-Clause",
   "bugs": {
-    "url": "https://github.com/chafey/charls-js/issues"
+    "url": "https://github.com/team-charls/charls-wasm/issues"
   },
-  "homepage": "https://github.com/chafey/charls-js#readme",
+  "homepage": "https://github.com/team-charls/charls-wasm#readme",
   "devDependencies": {
     "jest": "^30.2.0"
   }

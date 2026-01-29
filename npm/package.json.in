@@ -1,9 +1,28 @@
 {
   "name": "@team-charls/charls-wasm",
   "version": "@PROJECT_VERSION@",
+  "description": "WebAssembly build of CharLS - High-performance JPEG-LS codec for browsers and Node.js",
   "type": "module",
   "license": "BSD-3-Clause",
-
+  "author": "Team CharLS",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/team-charls/charls-wasm.git"
+  },
+  "bugs": {
+    "url": "https://github.com/team-charls/charls-wasm/issues"
+  },
+  "homepage": "https://github.com/team-charls/charls-wasm#readme",
+  "keywords": [
+    "jpeg-ls",
+    "jpegls",
+    "wasm",
+    "image",
+    "codec",
+    "compression",
+    "dicom",
+    "medical-imaging"
+  ],
   "exports": {
     ".": {
       "browser": "./index.js",
@@ -11,9 +30,9 @@
       "default": "./index.js"
     }
   },
-
   "files": [
     "*.js",
-    "*.wasm"
+    "*.wasm",
+    "*.md"
   ]
 }
