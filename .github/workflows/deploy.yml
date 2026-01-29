@@ -68,8 +68,8 @@ jobs:
           mkdir -p _site/dist
           cp dist/*.wasm _site/dist/
           cp dist/*.js _site/dist/
-          # If there are other assets needed, copy them too
-          # Adjust paths based on your actual build output
+          mkdir -p _site/test/fixtures
+          cp test/fixtures/* _site/test/fixtures/
 
       - name: Setup Pages
         uses: actions/configure-pages@v4
