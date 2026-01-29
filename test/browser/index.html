@@ -9,9 +9,9 @@
     integrity="sha384-1H217gwSVyLSIfaLxHbE7dRb3v4mYCKbpQvzx0cegeju1MVsGrX5xXxAvs/HgeFs"
     crossorigin="anonymous"></script>>
   <script type="module">
-    import createCharLSModule from 'dist/charlsjs.js';
-    import JpegLSDecoder from 'dist/jpegls-decoder.js';
-    import JpegLSEncoder from 'dist/jpegls-encoder.js';
+    import createCharLSModule from './dist/charlsjs.js';
+    import JpegLSDecoder from './dist/jpegls-decoder.js';
+    import JpegLSEncoder from './dist/jpegls-encoder.js';
 
     window.createCharLSModule = createCharLSModule;
     window.JpegLSDecoder = JpegLSDecoder;
@@ -366,8 +366,8 @@
   }
 
   function load(url) {
-    if (url === '../../test/fixtures/ct1.jls' ||
-      url === '../../test/fixtures/ct2.jls') {
+    if (url === 'test/fixtures/ct1.jls' ||
+      url === 'test/fixtures/ct2.jls') {
       $('#signed').prop('checked', true);
     } else {
       $('#signed').prop('checked', false);
@@ -409,7 +409,7 @@
     encoder = new JpegLSEncoder(charlsModule);
     $("#version").text(decoder.getVersion());
 
-    load('../../test/fixtures/ct1.jls');
+    load('test/fixtures/ct1.jls');
 
     $('#imageSelector').change(function (e) {
       reset();
