@@ -3,7 +3,7 @@
   SPDX-License-Identifier: BSD-3-Clause
 -->
 
-<img src="https://raw.githubusercontent.com/team-charls/charls-wasm/main/assets/jpeg_ls_logo.png" alt="JPEG-LS Logo" width="100"/> <img src="https://raw.githubusercontent.com/team-charls/charls-wasm/main/assets/webassembly.png" alt="Wasm Logo" width="100" style="margin-left: 20px;"/>
+<img src="https://raw.githubusercontent.com/team-charls/charls-wasm/main/assets/jpeg_ls_logo.png" alt="JPEG-LS Logo" width="100"/> <img src="https://raw.githubusercontent.com/team-charls/charls-wasm/main/assets/webassembly.png" alt="Wasm Logo" width="100" style="float: right;"/>
 
 # CharLS WebAssembly
 
