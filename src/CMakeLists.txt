@@ -54,5 +54,9 @@ add_custom_command(TARGET charlsjs POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_SOURCE_DIR}/jpegls-decoder.js ${CMAKE_SOURCE_DIR}/dist/
     COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_SOURCE_DIR}/jpegls-encoder.js ${CMAKE_SOURCE_DIR}/dist/
     COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_SOURCE_DIR}/jpegls-error.js ${CMAKE_SOURCE_DIR}/dist/
-    COMMENT "Copying JavaScript wrapper files to dist folder"
+    COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_SOURCE_DIR}/index.js ${CMAKE_SOURCE_DIR}/dist/
+    COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_SOURCE_DIR}/npm/README.md ${CMAKE_SOURCE_DIR}/dist/
+    COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_SOURCE_DIR}/LICENSE.md ${CMAKE_SOURCE_DIR}/dist/
+    COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_SOURCE_DIR}/CHANGELOG.md ${CMAKE_SOURCE_DIR}/dist/
+    COMMENT "Copying JavaScript wrapper files, README, LICENSE, and CHANGELOG to dist folder"
 )
