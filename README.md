@@ -3,7 +3,16 @@
   SPDX-License-Identifier: BSD-3-Clause
 -->
 
-<img src="https://raw.githubusercontent.com/team-charls/charls-wasm/main/assets/jpeg_ls_logo.png" alt="JPEG-LS Logo" width="100"/> <img src="https://raw.githubusercontent.com/team-charls/charls-wasm/main/assets/webassembly.png" alt="Wasm Logo" width="100" style="float: right;"/>
+<table width="100%">
+  <tr>
+    <td>
+      <img src="https://raw.githubusercontent.com/team-charls/charls-wasm/main/assets/jpeg_ls_logo.png" alt="JPEG-LS Logo" width="100"/>
+    </td>
+    <td>
+      <img src="https://raw.githubusercontent.com/team-charls/charls-wasm/main/assets/webassembly.png" alt="Wasm Logo" width="100"/>
+    </td>
+  </tr>
+</table>
 
 # CharLS WebAssembly
 
@@ -13,7 +22,7 @@
 ![Deploy](https://github.com/team-charls/charls-wasm/actions/workflows/deploy.yml/badge.svg)
 
 CharLS WebAssembly is a WebAssembly build of [CharLS](https://github.com/team-charls/charls).
-This project was originally forked from [charls-js](https://github.com/chafey/charls-js), created by Chris Hafey. It has been updated to use Wasm 3.0 and the latest version of CharLS. Supported environments are browsers and Node.js.
+This project was originally forked from [charls-js](https://github.com/chafey/charls-js), created by Chris Hafey. It has been updated to use Wasm 3.0 and the latest version of CharLS. Supported environments are browsers and Node.js. See the Support Matrix for details.
 
 ## Try It Out!
 
