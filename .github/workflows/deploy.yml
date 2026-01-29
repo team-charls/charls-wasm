@@ -54,6 +54,11 @@ jobs:
           emcmake cmake -B build -DCMAKE_BUILD_TYPE=Release -DCHARLS_PEDANTIC_WARNINGS=On -DCHARLS_TREAT_WARNING_AS_ERROR=On
           emmake make -C build
 
+      - name: Create dist directory and copy built artifacts
+        run: |
+          mkdir -p dist
+          cp build/src/charlsjs.js dist/
+          cp build/src/charlsjs.wasm dist/
       - name: Prepare deployment directory
         run: |
           mkdir -p _site
