@@ -5,19 +5,14 @@
 
 <table width="100%">
   <tr>
-    <td align="left">
+    <td>
       <img src="https://raw.githubusercontent.com/team-charls/charls-wasm/main/assets/jpeg_ls_logo.png" alt="JPEG-LS Logo" width="100"/>
     </td>
-    <td align="right">
+    <td>
       <img src="https://raw.githubusercontent.com/team-charls/charls-wasm/main/assets/webassembly.png" alt="Wasm Logo" width="100"/>
     </td>
   </tr>
 </table>
-
-<p align="left" style="display: flex; justify-content: space-between; align-items: center;">
-      <img src="https://raw.githubusercontent.com/team-charls/charls-wasm/main/assets/jpeg_ls_logo.png" alt="JPEG-LS Logo" width="100"/>
-      <img src="https://raw.githubusercontent.com/team-charls/charls-wasm/main/assets/webassembly.png" alt="Wasm Logo" width="100"/>
-</p>
 
 # CharLS WebAssembly
 
