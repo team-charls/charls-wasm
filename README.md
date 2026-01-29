@@ -31,7 +31,7 @@ Building charls-wasm itself is only supported on Linux platforms.
 | CharLS        | >= 3.0.0               | Development
 | CMake         | >= 3.22                | Development
 | Emscripten    | >= 4.0.23              | Development
-| Chrome\Edge   | >= 137                 | Usage
+| Chrome/Edge   | >= 137                 | Usage
 | Firefox       | >= 131                 | Usage
 | Safari        | >= 26.2                | Usage
 | Node.js       | >= 18.0                | Usage
