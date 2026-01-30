@@ -46,13 +46,16 @@ import { createJpegLSEncoder } from '@team-charls/charls-wasm';
 // Typical pattern is to re-use encoder instances for better performance.
 const encoder = await createJpegLSEncoder();
 
-function encodeImage(sourceBuffer, width, height, bitsPerSample, componentCount) {
+function encodeImageLossless(pixelBuffer, frameInfo) {
   const destinationBuffer = encoder.encode(sourceBuffer,
-    width,
-    height,
-    bitsPerSample,
-    componentCount
-  });
+    frameInfo.width,
+    frameInfo.height,
+    frameInfo.bitsPerSample,
+    frameInfo.componentCount,
+    0, // Interleave mode (0 = none, 1 = line, 2 = sample)
+    0, // Encoding options bitmask (0=none, 1=evenSize, 2=includeVersion, 4=includePCParametersJAI)
+    0, // NEAR parameter (0 = lossless, >0 = near-lossless)
+  );
 
   return destinationBuffer;
 }
