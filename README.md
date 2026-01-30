@@ -110,7 +110,7 @@ function encode(pixelBuffer, frameInfo) {
 For complex scenarios (long running applications) the method dispose
 can be called to clean up allocated WASM memory.
 ``` javascript
-// To explicit release memory call dispose on the codec objects.
+// To explicitly release memory call dispose on the codec objects.
 // When the Node.js application ends or the browser page is closed this
 // is normally done automatically.
 decoder.dispose();
