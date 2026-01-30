@@ -85,7 +85,7 @@ function decode(jpeglsEncodedBuffer) {
 
   // Do something with the decoded pixels here (e.g. display them)
   // The pixel arrangement for color images varies depending upon the
-  // interleaveMode parameter, see documentation in JpegLSDecode::getInterleaveMode()
+  // interleaveMode parameter, see documentation in JpegLSDecoder::getInterleaveMode()
 }
 ```
 
