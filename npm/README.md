@@ -47,7 +47,7 @@ import { createJpegLSEncoder } from '@team-charls/charls-wasm'
 const encoder = await createJpegLSEncoder()
 
 function encodeImageLossless (pixelBuffer, frameInfo) {
-  const destinationBuffer = encoder.encode(sourceBuffer,
+  const destinationBuffer = encoder.encode(pixelBuffer,
     frameInfo.width,
     frameInfo.height,
     frameInfo.bitsPerSample,
