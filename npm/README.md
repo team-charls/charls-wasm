@@ -22,31 +22,31 @@ npm install @team-charls/charls-wasm
 ### Decoding a JPEG-LS Image
 
 ```javascript
-import { createJpegLSDecoder } from '@team-charls/charls-wasm';
+import { createJpegLSDecoder } from '@team-charls/charls-wasm'
 
 // Typical pattern is to re-use decoder instances for better performance.
-const decoder = await createJpegLSDecoder();
+const decoder = await createJpegLSDecoder()
 
-function decodeImage(sourceBuffer) {
-  const destinationBuffer = decoder.decode(sourceBuffer);
+function decodeImage (sourceBuffer) {
+  const destinationBuffer = decoder.decode(sourceBuffer)
 
-  console.log('Frame info:', decoder.getFrameInfo());
-  console.log('Interleave mode:', decoder.getInterleaveMode());
-  console.log('Near lossless:', decoder.getNearLossless());
+  console.log('Frame info:', decoder.getFrameInfo())
+  console.log('Interleave mode:', decoder.getInterleaveMode())
+  console.log('Near lossless:', decoder.getNearLossless())
 
-  return destinationBuffer;
+  return destinationBuffer
 }
 ```
 
 ### Encoding to JPEG-LS
 
 ```javascript
-import { createJpegLSEncoder } from '@team-charls/charls-wasm';
+import { createJpegLSEncoder } from '@team-charls/charls-wasm'
 
 // Typical pattern is to re-use encoder instances for better performance.
-const encoder = await createJpegLSEncoder();
+const encoder = await createJpegLSEncoder()
 
-function encodeImageLossless(pixelBuffer, frameInfo) {
+function encodeImageLossless (pixelBuffer, frameInfo) {
   const destinationBuffer = encoder.encode(sourceBuffer,
     frameInfo.width,
     frameInfo.height,
@@ -54,10 +54,10 @@ function encodeImageLossless(pixelBuffer, frameInfo) {
     frameInfo.componentCount,
     0, // Interleave mode (0 = none, 1 = line, 2 = sample)
     0, // Encoding options bitmask (0=none, 1=evenSize, 2=includeVersion, 4=includePCParametersJAI)
-    0, // NEAR parameter (0 = lossless, >0 = near-lossless)
-  );
+    0 // NEAR parameter (0 = lossless, >0 = near-lossless)
+  )
 
-  return destinationBuffer;
+  return destinationBuffer
 }
 ```
 
