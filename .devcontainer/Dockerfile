@@ -1,5 +1,7 @@
 # SPDX-FileCopyrightText: © 2026 Team CharLS
 # SPDX-License-Identifier: BSD-3-Clause
+# Note: This Dockerfile is based on Microsoft VS Code dev container templates.
+#       See https://github.com/microsoft/vscode-dev-containers for the originals.
 
 FROM emscripten/emsdk:2.0.31
 
