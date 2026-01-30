@@ -79,7 +79,7 @@ class JpegLSEncoder {
    * @param {number} bitsPerSample - Bits per sample (e.g., 8 or 16)
    * @param {number} componentCount - Number of color components (1 for grayscale, 3 for RGB, etc.)
    * @param {number} [interleaveMode=0] - Interleave mode (0=none, 1=line, 2=sample)
-   * @param {number} [encodingOptions=0] - Encoding options bitmask
+   * @param {number} [encodingOptions=0] - Encoding options bitmask (0=none, 1=evenSize, 2=includeVersion, 4=includePCParametersJAI)
    * @param {number} [nearLossless=0] - NEAR parameter (0=lossless, >0=lossy)
    * @returns {Uint8Array} Encoded JPEG-LS data
    * @throws {JpegLSError} If encoding fails

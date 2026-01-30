@@ -5,7 +5,4 @@
 mkdir -p build-release
 emcmake cmake -S . -B build-release
 cmake --build build-release -j ${nprocs}
-mkdir -p dist
-cp ./build-release/src/charlsjs.js ./dist
-cp ./build-release/src/charlsjs.wasm ./dist
 npm test
