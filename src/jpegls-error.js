@@ -7,11 +7,11 @@
  * that occur during JPEG-LS encoding or decoding.
  */
 class JpegLSError extends Error {
-  constructor(message, code = -1) {
-    super(message);
-    this.name = 'JpegLSError';
-    this.code = code;
+  constructor (message, code = -1) {
+    super(message)
+    this.name = 'JpegLSError'
+    this.code = code
   }
 }
 
-export default JpegLSError;
+export default JpegLSError

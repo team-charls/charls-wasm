@@ -9,12 +9,29 @@
     "test": "NODE_OPTIONS=--experimental-vm-modules jest",
     "test:debug": "NODE_OPTIONS=--experimental-vm-modules jest --runInBand",
     "test:watch": "NODE_OPTIONS=--experimental-vm-modules jest --watch",
-    "test:coverage": "NODE_OPTIONS=--experimental-vm-modules jest --coverage"
+    "test:coverage": "NODE_OPTIONS=--experimental-vm-modules jest --coverage",
+    "lint": "standard",
+    "lint:fix": "standard --fix",
+    "lint:md": "eslint README.md npm/README.md",
+    "lint:md:fix": "eslint README.md npm/README.md --fix"
   },
   "jest": {
     "testEnvironment": "node",
-    "testMatch": ["**/test/unit/**/*.test.js"],
+    "testMatch": [
+      "**/test/unit/**/*.test.js"
+    ],
     "transform": {}
+  },
+  "standard": {
+    "env": [
+      "jest"
+    ],
+    "globals": [
+      "fail"
+    ],
+    "plugins": [
+      "markdown"
+    ]
   },
   "repository": {
     "type": "git",
@@ -27,6 +44,8 @@
   },
   "homepage": "https://github.com/team-charls/charls-wasm#readme",
   "devDependencies": {
-    "jest": "^30.2.0"
+    "eslint-plugin-markdown": "^5.1.0",
+    "jest": "^30.2.0",
+    "standard": "^17.1.2"
   }
 }
