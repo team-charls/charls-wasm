@@ -78,6 +78,7 @@
         "cinttypes": "cpp"
     },
     "cSpell.words": [
+        "autoremove",
         "BINDIR",
         "bitstream",
         "charls",
@@ -96,6 +97,7 @@
         "Emscripten",
         "emsdk",
         "ERRC",
+        "fsfe",
         "fwasm",
         "gitsubmodule",
         "Hafey",
@@ -105,11 +107,13 @@
         "jpegls",
         "MALLOC",
         "mymindstorm",
+        "noninteractive",
         "nprocs",
         "opendb",
         "opensdf",
         "RRRRGGGGBBBB",
         "STREQUAL",
+        "usermod",
         "ycbcr",
         "ycck"
     ]

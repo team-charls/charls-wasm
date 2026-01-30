@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: © 2020 Chris Hafey, Team CharLS
+# SPDX-License-Identifier: BSD-3-Clause
+
 [submodule "extern/charls"]
 	path = extern/charls
 	url = ../../team-charls/charls
