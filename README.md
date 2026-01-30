@@ -76,7 +76,7 @@ decode(jpeglsEncodedBuffer);
 
 function decode(jpeglsEncodedBuffer) {
   // Decode it
-  const decodedPixelBuffer = decoder.decode(sourceBuffer);
+  const decodedPixelBuffer = decoder.decode(jpeglsEncodedBuffer);
 
   // Get information about the decoded image
   const frameInfo = decoder.getFrameInfo();
