@@ -6,8 +6,8 @@ import JpegLSDecoder from './jpegls-decoder.js';
 import JpegLSEncoder from './jpegls-encoder.js';
 import JpegLSError from './jpegls-error.js';
 
-let moduleInstance = null;
-let modulePromise = null;
+let charlsModuleInstance = null;
+let charlsModulePromise = null;
 
 /**
  * Initializes the CharLS WASM module.
@@ -15,17 +15,17 @@ let modulePromise = null;
  * but can be called explicitly to preload the module.
  * @returns {Promise<object>} The initialized WASM module
  */
-async function initializeModule() {
-  if (moduleInstance) {
-    return moduleInstance;
+async function initializeCharLSModule() {
+  if (charlsModuleInstance) {
+    return charlsModuleInstance;
   }
 
-  if (!modulePromise) {
-    modulePromise = createCharLSModule();
+  if (!charlsModulePromise) {
+    charlsModulePromise = createCharLSModule();
   }
 
-  moduleInstance = await modulePromise;
-  return moduleInstance;
+  charlsModuleInstance = await charlsModulePromise;
+  return charlsModuleInstance;
 }
 
 /**
@@ -35,7 +35,7 @@ async function initializeModule() {
  * @throws {JpegLSError} If decoder creation fails
  */
 async function createJpegLSDecoder() {
-  const module = await initializeModule();
+  const module = await initializeCharLSModule();
   return new JpegLSDecoder(module);
 }
 
@@ -46,14 +46,14 @@ async function createJpegLSDecoder() {
  * @throws {JpegLSError} If encoder creation fails
  */
 async function createJpegLSEncoder() {
-  const module = await initializeModule();
+  const module = await initializeCharLSModule();
   return new JpegLSEncoder(module);
 }
 
 export {
   createJpegLSDecoder,
   createJpegLSEncoder,
-  initializeModule,
+  initializeCharLSModule,
   JpegLSDecoder,
   JpegLSEncoder,
   JpegLSError

@@ -3,6 +3,9 @@
   "type": "module",
   "private": true,
   "main": "index.js",
+  "dependencies": {
+    "@team-charls/charls-wasm": "file:../../dist"
+  },
   "scripts": {
     "test": "node index.js"
   }

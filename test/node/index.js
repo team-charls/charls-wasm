@@ -1,32 +1,34 @@
 // SPDX-FileCopyrightText: © 2020 Chris Hafey, Team CharLS
 // SPDX-License-Identifier: BSD-3-Clause
 
-import createCharLSModule from '../../dist/charlsjs.js';
-import JpegLSDecoder from '../../dist/jpegls-decoder.js';
-import JpegLSEncoder from '../../dist/jpegls-encoder.js';
+import { createJpegLSDecoder, createJpegLSEncoder } from '@team-charls/charls-wasm';
 import fs from 'fs';
 
-let charlsModule;
+let decoder;
+let encoder;
 
 async function main() {
-  // Initialize the CharLS WASM module
-  charlsModule = await createCharLSModule();
+  decoder = await createJpegLSDecoder();
+  encoder = await createJpegLSEncoder();
   console.log('CharLS module initialized');
 
   decode('../fixtures/ct1.jls');
   decode('../fixtures/ct2.jls');
 
-  encode('../fixtures/ct2.raw', {width: 512, height: 512, bitsPerSample: 16, componentCount: 1});
+  encode('../fixtures/ct2.raw', { width: 512, height: 512, bitsPerSample: 16, componentCount: 1 });
+
+  // cleanup allocated memory
+  decoder.dispose();
+  encoder.dispose();
 }
 
-function decode(pathToJpegLSFile, iterations = 10) {
+function decode(pathToJpegLSFile, iterations = 100) {
   const sourceBuffer = fs.readFileSync(pathToJpegLSFile);
-  const decoder = new JpegLSDecoder(charlsModule);
 
   // do the actual benchmark
   let destinationBuffer = null;
   const beginDecode = process.hrtime();
-  for(var i=0; i < iterations; i++) {
+  for (var i = 0; i < iterations; i++) {
     destinationBuffer = decoder.decode(sourceBuffer);
   }
   const decodeDuration = process.hrtime(beginDecode); // hrtime returns seconds/nanoseconds tuple
@@ -37,17 +39,14 @@ function decode(pathToJpegLSFile, iterations = 10) {
   const frameInfo = decoder.getFrameInfo();
   console.log('  frameInfo = ', frameInfo);
   console.log('  decoded length = ', destinationBuffer.length);
-
-  decoder.dispose();
 }
 
-function encode(pathToUncompressedImageFrame, imageFrame, iterations = 10) {
+function encode(pathToUncompressedImageFrame, imageFrame, iterations = 100) {
   const uncompressedImageFrame = fs.readFileSync(pathToUncompressedImageFrame);
-  const encoder = new JpegLSEncoder(charlsModule);
 
   let destinationBuffer = null;
   const encodeBegin = process.hrtime();
-  for(var i=0; i < iterations;i++) {
+  for (var i = 0; i < iterations; i++) {
     destinationBuffer = encoder.encode(
       uncompressedImageFrame,
       imageFrame.width,
@@ -62,9 +61,6 @@ function encode(pathToUncompressedImageFrame, imageFrame, iterations = 10) {
   // print out information about the encode
   console.log("Encode of " + pathToUncompressedImageFrame + " took " + ((encodeDurationInSeconds / iterations * 1000)) + " ms");
   console.log('  encoded length=', destinationBuffer.length);
-
-  // cleanup allocated memory
-  encoder.dispose();
 }
 
 main();

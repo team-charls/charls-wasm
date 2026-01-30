@@ -50,60 +50,71 @@ Building charls-wasm itself is only supported on Linux platforms.
 Install this in your JavaScript project using npm:
 
 ```bash
-# NOTE - this is not published yet so won't work yet...
-#npm install --save-dev charls-js
+npm install @team-charls/charls-wasm
 ```
 
 ## Usage
 
-Before using this library, you must wait for it to be initialized:
+Before using this library, create the codec instances needed:
 
 ``` javascript
-const charls = require('charlsjs')
-charls.onRuntimeInitialized = async _ => {
-    // Now you can use it
-}
+
+// For optimal performance, re-use the codec instances.
+import { createJpegLSDecoder, createJpegLSEncoder } from '@team-charls/charls-wasm';
+const decoder = await createJpegLSDecoder();
+const encoder = await createJpegLSEncoder();
 ```
 
-To decode a JPEG-LS image, create a decoder instance, copy the JPEG-LS bitstream
-into its memory space, decode it, copy the decoded pixels out of its memory
-space and finally, delete the decoder instance.
+To decode a JPEG-LS image, use a pre-allocated or create a local decoder instance.
+Use the single method decode or readHeader+decodeToBuffer.
+The readHeader method allows more control and provides more feedback
+to decide to decode or abort when reading untrusted images.
 
 ```javascript
-function decode(jpeglsEncodedBitStream) {
-  // Create a decoder instance
-  const decoder = new charls.JpegLSDecoder();
+let jpeglsEncodedBuffer = // read from file, load from URL, etc
+decode(jpeglsEncodedBuffer);
 
-  // get pointer to the source/encoded bit stream buffer in WASM memory
-  // that can hold the encoded bitstream
-  const encodedBufferInWASM = decoder.getEncodedBuffer(jpeglsEncodedBitStream.length);
+function decode(jpeglsEncodedBuffer) {
+  // Decode it
+  const decodedPixelBuffer = decoder.decode(sourceBuffer);
 
-  // copy the encoded bitstream into WASM memory buffer
-  encodedBufferInWASM.set(jpeglsEncodedBitStream);
-
-  // decode it
-  decoder.decode();
-
-  // get information about the decoded image
+  // Get information about the decoded image
   const frameInfo = decoder.getFrameInfo();
   const interleaveMode = decoder.getInterleaveMode();
   const nearLossless = decoder.getNearLossless();
 
-  // get the decoded pixels
-  const decodedPixelsInWASM = decoder.getDecodedBuffer();
-
-  // TODO: do something with the decoded pixels here (e.g. display them)
+  // Do something with the decoded pixels here (e.g. display them)
   // The pixel arrangement for color images varies depending upon the
   // interleaveMode parameter, see documentation in JpegLSDecode::getInterleaveMode()
-
-  // delete the instance.  Note that this frees up memory including the
-  // encodedBufferInWASM and decodedPixelsInWASM invalidating them.
-  // Do not use either after calling delete!
-  decoder.delete();
 }
+```
 
-const jpeglsEncodedBitStream = // read from file, load from URL, etc
-decode(jpeglsEncodedBitStream)
+To encode a file pass the buffer and the information about the image to the encoder.
+```javascript
+function encode(pixelBuffer, frameInfo) {
+  const jpeglsEncodedBuffer = encoder.encode(
+      pixelBuffer,
+      frameInfo.width,
+      frameInfo.height,
+      frameInfo.bitsPerSample,
+      frameInfo.componentCount,
+      0, // Interleave mode (0 = none, 1 = line, 2 = sample)
+      0, // Encoding options bitmask (0=none, 1=evenSize, 2=includeVersion, 4=includePCParametersJAI)
+      0, // NEAR parameter (0 = lossless, >0 = near-lossless)
+    );
+
+  // Do something with the encoded data: save it to a file, decode it, etc.
+}
+```
+
+For complex scenarios (long running applications) the method dispose
+can be called to clean up allocated WASM memory.
+``` javascript
+// To explicit release memory call dispose on the codec objects.
+// When the Node.js application ends or the browser page is closed this
+// is normally done automatically.
+decoder.dispose();
+encoder.dispose();
 ```
 
 See examples for [browsers](test/browser/index.html) and [nodejs](test/node/index.js).

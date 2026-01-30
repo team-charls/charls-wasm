@@ -51,6 +51,8 @@ set_target_properties(
 # Copy JavaScript wrapper files to the dist folder
 add_custom_command(TARGET charlsjs POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_SOURCE_DIR}/dist
+    COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_FILE_DIR:charlsjs>/charlsjs.js ${CMAKE_SOURCE_DIR}/dist/
+    COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_FILE_DIR:charlsjs>/charlsjs.wasm ${CMAKE_SOURCE_DIR}/dist/
     COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_SOURCE_DIR}/jpegls-decoder.js ${CMAKE_SOURCE_DIR}/dist/
     COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_SOURCE_DIR}/jpegls-encoder.js ${CMAKE_SOURCE_DIR}/dist/
     COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_SOURCE_DIR}/jpegls-error.js ${CMAKE_SOURCE_DIR}/dist/
@@ -58,5 +60,5 @@ add_custom_command(TARGET charlsjs POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_SOURCE_DIR}/npm/README.md ${CMAKE_SOURCE_DIR}/dist/
     COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_SOURCE_DIR}/LICENSE.md ${CMAKE_SOURCE_DIR}/dist/
     COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_SOURCE_DIR}/CHANGELOG.md ${CMAKE_SOURCE_DIR}/dist/
-    COMMENT "Copying JavaScript wrapper files, README, LICENSE, and CHANGELOG to dist folder"
+    COMMENT "Copying build outputs, JS wrappers, README, LICENSE, and CHANGELOG to dist folder"
 )
