@@ -29,24 +29,25 @@ set(CMAKE_CXX_FLAGS_RELEASE "-O3")
 # MODULARIZE=1: Generate the code as a module which can be instantiated.
 # EXPORT_NAME=createCharLSModule: Name of the function to create the module instance.
 # EXPORT_ES6=1: Generate the code as an ES6 module.
+# STRICT: Enables strict mode for generated JavaScript code. (default is 0)
 
-set_target_properties(
+target_link_options(
     charlsjs
-    PROPERTIES
-    LINK_FLAGS "\
-      -fwasm-exceptions \
-      -s MALLOC=emmalloc \
-      -s ALLOW_MEMORY_GROWTH=1 \
-      -s INITIAL_HEAP=262144000 \
-      -s ASSERTIONS=0 \
-      -s FILESYSTEM=0 \
-      -s EXPORTED_FUNCTIONS=['_charls_jpegls_decoder_create','_charls_jpegls_decoder_destroy','_charls_jpegls_decoder_set_source_buffer','_charls_jpegls_decoder_read_header','_charls_jpegls_decoder_get_frame_info','_charls_jpegls_decoder_get_near_lossless','_charls_jpegls_decoder_get_interleave_mode','_charls_jpegls_decoder_get_destination_size','_charls_jpegls_decoder_decode_to_buffer','_charls_jpegls_encoder_create','_charls_jpegls_encoder_destroy','_charls_jpegls_encoder_set_frame_info','_charls_jpegls_encoder_set_near_lossless','_charls_jpegls_encoder_set_interleave_mode','_charls_jpegls_encoder_set_encoding_options','_charls_jpegls_encoder_get_estimated_destination_size','_charls_jpegls_encoder_set_destination_buffer','_charls_jpegls_encoder_encode_from_buffer','_charls_jpegls_encoder_get_bytes_written','_charls_jpegls_encoder_rewind','_charls_get_error_message','_charls_get_version_string','_malloc','_free'] \
-      -s EXPORTED_RUNTIME_METHODS=['getValue','setValue','UTF8ToString','HEAPU8'] \
-      -s ENVIRONMENT=[web,node] \
-      -s MODULARIZE=1 \
-      -s EXPORT_ES6=1 \
-      -s EXPORT_NAME=createCharLSModule \
-   ")
+    PRIVATE
+      -fwasm-exceptions
+      -sMALLOC=emmalloc
+      -sALLOW_MEMORY_GROWTH=1
+      -sINITIAL_HEAP=262144000
+      -sASSERTIONS=0
+      -sFILESYSTEM=0
+      -sEXPORTED_FUNCTIONS=['_charls_jpegls_decoder_create','_charls_jpegls_decoder_destroy','_charls_jpegls_decoder_set_source_buffer','_charls_jpegls_decoder_read_header','_charls_jpegls_decoder_get_frame_info','_charls_jpegls_decoder_get_near_lossless','_charls_jpegls_decoder_get_interleave_mode','_charls_jpegls_decoder_get_destination_size','_charls_jpegls_decoder_decode_to_buffer','_charls_jpegls_encoder_create','_charls_jpegls_encoder_destroy','_charls_jpegls_encoder_set_frame_info','_charls_jpegls_encoder_set_near_lossless','_charls_jpegls_encoder_set_interleave_mode','_charls_jpegls_encoder_set_encoding_options','_charls_jpegls_encoder_get_estimated_destination_size','_charls_jpegls_encoder_set_destination_buffer','_charls_jpegls_encoder_encode_from_buffer','_charls_jpegls_encoder_get_bytes_written','_charls_jpegls_encoder_rewind','_charls_get_error_message','_charls_get_version_string','_malloc','_free']
+      -sEXPORTED_RUNTIME_METHODS=['getValue','setValue','UTF8ToString','HEAPU8']
+      -sENVIRONMENT=[web,node]
+      -sMODULARIZE=1
+      -sEXPORT_ES6=1
+      -sEXPORT_NAME=createCharLSModule
+      -sSTRICT=1
+)
 
 # Copy JavaScript wrapper files to the dist folder
 add_custom_command(TARGET charlsjs POST_BUILD
