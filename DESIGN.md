@@ -1,6 +1,11 @@
+<!--
+  SPDX-FileCopyrightText: © 2020 Chris Hafey, Team CharLS
+  SPDX-License-Identifier: BSD-3-Clause
+-->
+
 # CharLS-JS Design
 
-The [original JS build of CharLS](https://github.com/cornerstonejs/charls) 
+The [original JS build of CharLS](https://github.com/cornerstonejs/charls)
 was done in 2016 specifically to add JPEG-LS decoding to
 [cornerstonejs](https://github.com/cornerstonejs).  Unfortunately nobody
 picked up maintenance for the original project so it fell behind
@@ -13,7 +18,7 @@ After quite a bit of research and experimentation, I decided it would be better
 to keep the JS/WASM code separate from the main CharLS library but improve the way
 the JS/WASM project was setup to ease maintenance.  Part of my research lead
 me to discover [Modern CMake](https://cliutils.gitlab.io/modern-cmake/) which lead
-to a prototype of how it would work with EMSCRIPTEN 
+to a prototype of how it would work with EMSCRIPTEN
 [here](https://github.com/chafey/modern-cpp-lib-js).
 
 ## Git Submodules
@@ -22,7 +27,7 @@ The main charls library is referenced as a git submodule.  This strategy ensures
 that JS/WASM code does not creep into the main charls library so it can
 remain pure C/C++ code.  This strategy also simplifies maintenance since the
 charls submodule tracks the master branch and can be easily updated to
-new versions via 
+new versions via
 
 ``` bash
 git pull --recurse-submodules
@@ -42,7 +47,7 @@ add_subdirectory(extern/charls EXCLUDE_FROM_ALL)
 ```
 
 This approach allows this library to easily reference/load/link the charls main
-project library by re-using its CMakeLists.txt file.  The EXCLUDE_FROM_ALL 
+project library by re-using its CMakeLists.txt file.  The EXCLUDE_FROM_ALL
 causes it to ignore any build targets not explicitly linked (e.g. the test code
 and apps which are not needed by this library).
 
@@ -61,7 +66,7 @@ such as the nearLossless parameter and interleaveMode.
 WASM code runs in its own sandbox and cannot access memory outside of that
 sandbox.  This means that data in JavaScript memory needs to be copied into
 WASM memory before the WASM code can use it.  Since decoded images will
-typically come from a server, the JPEG-LS encoded bitstream will always be 
+typically come from a server, the JPEG-LS encoded bitstream will always be
 in JavaScript memory (e.g. in response to a fetch() to read it from HTTP
 server).  The encoded bitstream needs to be copied into WASM space before
 it can be decoded since the WASM decoder has no ability to access the
