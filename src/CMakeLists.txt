@@ -7,13 +7,10 @@ target_link_libraries(charlsjs PRIVATE charls)
 
 target_compile_features(charlsjs PUBLIC cxx_std_17)
 
-if (CMAKE_BUILD_TYPE STREQUAL Debug)
-	SET(linkFlags "-g4")
-else() # Either MinSizeRel, RelWithDebInfo or Release, all which run with optimizations enabled.
-	SET(linkFlags "-O3")
-endif()
-
-set(CMAKE_CXX_FLAGS_RELEASE "-O3")
+target_compile_options(charlsjs PRIVATE
+        $<$<CONFIG:Debug>:-g -O0 -gsource-map>
+        $<$<CONFIG:Release>:-O3>
+    )
 
 # Documentation for the Emscripten linker flags:
 # https://emscripten.org/docs/tools_reference/settings_reference.html
@@ -35,10 +32,8 @@ target_link_options(
     charlsjs
     PRIVATE
       -fwasm-exceptions
-      -sMALLOC=emmalloc
       -sALLOW_MEMORY_GROWTH=1
       -sINITIAL_HEAP=262144000
-      -sASSERTIONS=0
       -sFILESYSTEM=0
       -sEXPORTED_FUNCTIONS=['_charls_jpegls_decoder_create','_charls_jpegls_decoder_destroy','_charls_jpegls_decoder_set_source_buffer','_charls_jpegls_decoder_read_header','_charls_jpegls_decoder_get_frame_info','_charls_jpegls_decoder_get_near_lossless','_charls_jpegls_decoder_get_interleave_mode','_charls_jpegls_decoder_get_destination_size','_charls_jpegls_decoder_decode_to_buffer','_charls_jpegls_encoder_create','_charls_jpegls_encoder_destroy','_charls_jpegls_encoder_set_frame_info','_charls_jpegls_encoder_set_near_lossless','_charls_jpegls_encoder_set_interleave_mode','_charls_jpegls_encoder_set_encoding_options','_charls_jpegls_encoder_get_estimated_destination_size','_charls_jpegls_encoder_set_destination_buffer','_charls_jpegls_encoder_encode_from_buffer','_charls_jpegls_encoder_get_bytes_written','_charls_jpegls_encoder_rewind','_charls_get_error_message','_charls_get_version_string','_malloc','_free']
       -sEXPORTED_RUNTIME_METHODS=['getValue','setValue','UTF8ToString','HEAPU8']
@@ -47,7 +42,18 @@ target_link_options(
       -sEXPORT_ES6=1
       -sEXPORT_NAME=createCharLSModule
       -sSTRICT=1
+      $<$<CONFIG:Debug>:
+        -sMALLOC=emmalloc-memvalidate
+        -sASSERTIONS=2
+        -sSAFE_HEAP=1
+        -sSTACK_OVERFLOW_CHECK=2
+      >
+      $<$<CONFIG:Release>:
+        -sMALLOC=emmalloc
+        -sASSERTIONS=0
+      >
 )
+
 
 # Copy JavaScript wrapper files to the dist folder
 add_custom_command(TARGET charlsjs POST_BUILD
