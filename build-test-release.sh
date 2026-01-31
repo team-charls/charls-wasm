@@ -3,6 +3,6 @@
 # SPDX-License-Identifier: BSD-3-Clause
 
 mkdir -p build-release
-emcmake cmake -S . -B build-release
+emcmake cmake -S . -B build-release -D CMAKE_BUILD_TYPE=Release
 cmake --build build-release -j ${nprocs}
 npm test
