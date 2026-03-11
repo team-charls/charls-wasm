@@ -34,8 +34,8 @@ Dockerfile in the .devcontainer folder.
 ## Building WASM (requires EMSCRIPTEN)
 
 ```bash
-build-test-debug.sh
-build-test-release.sh
+./build-test-debug.sh
+./build-test-release.sh
 ```
 
 ## Testing in a browser
