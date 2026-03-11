@@ -61,5 +61,5 @@ The build script generates two files in the /dist folder:
 - Build the release build
 - Update release notes
 - Run: npm pack as test
-- Run: nmp publish --access public
+- Run: npm publish --access public
 
