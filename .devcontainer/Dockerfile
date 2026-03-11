@@ -1,33 +1,37 @@
 # SPDX-FileCopyrightText: © 2026 Team CharLS
 # SPDX-License-Identifier: BSD-3-Clause
 # Note: This Dockerfile is based on Microsoft VS Code dev container templates.
-#       See https://github.com/microsoft/vscode-dev-containers for the originals.
+#       See https://github.com/microsoft/devcontainers for the originals.
 
-FROM emscripten/emsdk:2.0.31
+FROM emscripten/emsdk:4.0.23
 
 # Avoid warnings by switching to noninteractive
 ENV DEBIAN_FRONTEND=noninteractive
 
-# This Dockerfile's base image has a non-root user with sudo access. Use the "remoteUser"
-# property in devcontainer.json to use it. On Linux, the container user's GID/UIDs
-# will be updated to match your local UID/GID (when using the dockerFile property).
-# See https://aka.ms/vscode-remote/containers/non-root-user for details.
-ARG USERNAME=vscode
-ARG USER_UID=1000
-ARG USER_GID=$USER_UID
-
 # Configure apt and install packages
 RUN apt-get update \
+    && apt-get -y install --no-install-recommends \
     #
-    # Install C++ tools
-    && apt-get -y install build-essential cppcheck valgrind \
+    # Install C++ development tools
+    build-essential \
+    cmake \
+    ninja-build \
+    gdb \
+    cppcheck \
+    clang-format \
+    clang-tidy \
     #
-    # [Optional] Update UID/GID if needed
-    && if [ "$USER_GID" != "1000" ] || [ "$USER_UID" != "1000" ]; then \
-        groupmod --gid $USER_GID $USERNAME \
-        && usermod --uid $USER_UID --gid $USER_GID $USERNAME \
-        && chown -R $USER_UID:$USER_GID /home/$USERNAME; \
-    fi \
+    # Install utilities
+    git \
+    curl \
+    wget \
+    zip \
+    unzip \
+    ca-certificates \
+    #
+    # Install Node.js (LTS version via NodeSource)
+    && curl -fsSL https://deb.nodesource.com/setup_lts.x | bash - \
+    && apt-get install -y nodejs \
     #
     # Clean up
     && apt-get autoremove -y \
@@ -36,3 +40,6 @@ RUN apt-get update \
 
 # Switch back to dialog for any ad-hoc use of apt-get
 ENV DEBIAN_FRONTEND=dialog
+
+# Set the default user to emscripten (already exists in base image)
+USER emscripten
