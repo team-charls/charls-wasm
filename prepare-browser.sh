@@ -5,7 +5,7 @@
 # When running a local http server (for example python3 -m http.server), the server
 # cannot access files outside the root folder. Therefore copy the built files to
 # the test/browser/dist folder.
-
+mkdir -p ./test/browser/dist ./test/browser/test/fixtures
 cp ./dist/charlsjs.js ./test/browser/dist/
 cp ./dist/charlsjs.wasm ./test/browser/dist/
 cp ./dist/jpegls-decoder.js ./test/browser/dist/

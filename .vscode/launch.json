@@ -13,19 +13,35 @@
     {
       "type": "node",
       "request": "launch",
-      "name": "Debug Jest decoder.test.js",
+      "name": "Debug Jest jpegls-decoder.test.js",
       "program": "${workspaceFolder}/node_modules/jest/bin/jest.js",
       "args": [
         "--runInBand",
         "--no-cache",
-        "${workspaceFolder}/test/unit/decoder.test.js"
+        "${workspaceFolder}/test/unit/jpegls-decoder.test.js"
       ],
       "console": "integratedTerminal",
       "internalConsoleOptions": "neverOpen",
       "runtimeArgs": [
         "--experimental-vm-modules"
       ],
-      "disableOptimisticBPs": true,
+      "cwd": "${workspaceFolder}"
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Debug Jest jpegls-encoder.test.js",
+      "program": "${workspaceFolder}/node_modules/jest/bin/jest.js",
+      "args": [
+        "--runInBand",
+        "--no-cache",
+        "${workspaceFolder}/test/unit/jpegls-encoder.test.js"
+      ],
+      "console": "integratedTerminal",
+      "internalConsoleOptions": "neverOpen",
+      "runtimeArgs": [
+        "--experimental-vm-modules"
+      ],
       "cwd": "${workspaceFolder}"
     },
     {
@@ -43,7 +59,6 @@
       "runtimeArgs": [
         "--experimental-vm-modules"
       ],
-      "disableOptimisticBPs": true,
       "cwd": "${workspaceFolder}"
     }
   ]
