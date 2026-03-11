@@ -1,29 +1,48 @@
-// For format details, see https://aka.ms/vscode-remote/devcontainer.json or this file's README at:
-// https://github.com/microsoft/vscode-dev-containers/tree/v0.112.0/containers/cpp
+// For format details, see https://containers.dev/implementors/json_reference/
 {
-	"name": "C++",
-	"dockerFile": "Dockerfile",
-	"runArgs": [ "--cap-add=SYS_PTRACE", "--security-opt", "seccomp=unconfined"],
-
-	// Set *default* container specific settings.json values on container create.
-	"settings": { 
-		"terminal.integrated.shell.linux": "/bin/bash"
+	"name": "CharLS WebAssembly Development",
+	"build": {
+		"dockerfile": "Dockerfile"
 	},
-
-	// Add the IDs of extensions you want installed when the container is created.
-	"extensions": [
-		"ms-vscode.cpptools",
-		"twxs.cmake",
-		"flixs.vs-code-http-server-and-html-preview"
+	"capAdd": [
+		"SYS_PTRACE"
+	],
+	"securityOpt": [
+		"seccomp=unconfined"
 	],
 
-	// Use 'forwardPorts' to make a list of ports inside the container available locally.
-	// "forwardPorts": [],
+	// Configure tool-specific properties
+	"customizations": {
+		"vscode": {
+			// Set *default* container specific settings.json values on container create
+			"settings": {
+				"terminal.integrated.defaultProfile.linux": "bash",
+				"cmake.configureOnOpen": false,
+				"C_Cpp.default.configurationProvider": "ms-vscode.cmake-tools"
+			},
 
-	// Use 'postCreateCommand' to run commands after the container is created.
-	// "postCreateCommand": "gcc -v",
+			// Add the IDs of extensions you want installed when the container is created
+			"extensions": [
+				"ms-vscode.cpptools",
+				"ms-vscode.cpptools-extension-pack",
+				"ms-vscode.cmake-tools",
+				"twxs.cmake",
+				"dbaeumer.vscode-eslint",
+				"esbenp.prettier-vscode",
+				"ms-vscode.live-server"
+			]
+		}
+	},
 
-	// Uncomment to connect as a non-root user. See https://aka.ms/vscode-remote/containers/non-root.
+	// Use 'forwardPorts' to make a list of ports inside the container available locally
+	// "forwardPorts": [8080],
+
+	// Use 'postCreateCommand' to run commands after the container is created
+	"postCreateCommand": "npm install",
+
+	// Use 'postStartCommand' to run commands after the container starts
+	// "postStartCommand": "",
+
+	// Connect as the emscripten user
 	"remoteUser": "emscripten"
-
 }
