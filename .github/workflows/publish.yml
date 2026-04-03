@@ -13,8 +13,8 @@ jobs:
     environment: npm          # GitHub Actions environment name for protections/secrets, not npmjs.com config
 
     permissions:
+      id-token: write
       contents: read
-      id-token: write         # still needed — this IS the trust mechanism
 
     steps:
       - name: Checkout source
@@ -32,7 +32,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '22'
+          node-version: '24'
           registry-url: 'https://registry.npmjs.org'
 
       - name: Verify Emscripten
@@ -50,4 +50,4 @@ jobs:
         run: npm test
 
       - name: Publish npm package
-        run: npm publish ./dist --provenance --access public
+        run: npm publish ./dist --access public
