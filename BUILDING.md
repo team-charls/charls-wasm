@@ -9,7 +9,7 @@ CharLS WebAssembly utilizes CMake and EMSCRIPTEN for building. The dependencies 
 for this build are as follows:
 
 * CMake 3.22 or better
-* Emscripten 4.0.23 or better
+* Emscripten 5.0.4 or better
 * NodeJS 18.0 or later (for running test/node)
 * Modern browser (for running test/browser), see also support matrix in README.md
 
