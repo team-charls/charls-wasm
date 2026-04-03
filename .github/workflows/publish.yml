@@ -1,0 +1,47 @@
+# SPDX-FileCopyrightText: © 2026 Team CharLS
+# SPDX-License-Identifier: BSD-3-Clause
+
+name: Publish Signed npm Package
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    environment: npm          # GitHub Actions environment name for protections/secrets, not npmjs.com config
+
+    permissions:
+      contents: read
+      id-token: write         # still needed — this IS the trust mechanism
+
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 1
+          submodules: recursive
+
+      - name: Setup Emscripten
+        uses: mymindstorm/setup-emsdk@v14
+        with:
+          version: 5.0.4
+          actions-cache-folder: 'emsdk-cache'
+
+      - name: Verify Emscripten
+        run: emcc --version
+
+      - name: Build with CMake
+        run: |
+          emcmake cmake -B build -DCMAKE_BUILD_TYPE=Release -DCHARLS_PEDANTIC_WARNINGS=On -DCHARLS_TREAT_WARNING_AS_ERROR=On
+          emmake make -C build
+
+      - name: Install Node.js dependencies
+        run: npm ci
+
+      - name: Run unit tests
+        run: npm test
+
+      - name: Publish npm package
+        run: npm publish ./dist --provenance --access public

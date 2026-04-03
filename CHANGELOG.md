@@ -9,6 +9,17 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [0.9.0 - 2026-04-03]
+
+### Added
+
+- CI pipeline to publish package from GitHub.
+
+### Changed
+
+- Updated dependencies to the latest versions.
+
+
 ## [0.8.0 - 2026-01-31]
 
 ### Added
