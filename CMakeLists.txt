@@ -3,7 +3,7 @@
 
 cmake_minimum_required(VERSION 3.22...4.2)
 
-project (charlsjs VERSION 0.8.0 LANGUAGES CXX)
+project (charlsjs VERSION 0.9.0 LANGUAGES CXX)
 
 # The CMake project version is leading: use it to generate package.json
 set(DIST_DIR "${CMAKE_SOURCE_DIR}/dist")
