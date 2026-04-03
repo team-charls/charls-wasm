@@ -10,7 +10,7 @@ on:
 jobs:
   publish:
     runs-on: ubuntu-latest
-    environment: npm          # matches what you set on npmjs.com
+    environment: npm          # GitHub Actions environment name for protections/secrets, not npmjs.com config
 
     permissions:
       contents: read
