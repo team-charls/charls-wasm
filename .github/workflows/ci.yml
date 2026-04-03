@@ -2,6 +2,9 @@
 # SPDX-License-Identifier: BSD-3-Clause
 
 name: Build and test
+permissions:
+  contents: read
+
 on:
   pull_request:
   push:
