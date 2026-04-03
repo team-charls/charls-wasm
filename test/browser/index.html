@@ -116,10 +116,7 @@
   let encoder = undefined;
   let sourceBuffer = undefined;
   let uncompressedImageFrame = undefined;
-  let frameInfo = undefined;
-  let quantization = 0;
   let minMax = undefined;
-  let interleaveMode = undefined;
 
   function getMinMax(frameInfo, pixelData) {
     const numPixels = frameInfo.width * frameInfo.height * frameInfo.componentCount;
