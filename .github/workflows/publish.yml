@@ -43,8 +43,5 @@ jobs:
       - name: Run unit tests
         run: npm test
 
-      - name: Run unit tests
-        run: npm test
-
       - name: Publish npm package
         run: npm publish ./dist --provenance --access public
