@@ -13,7 +13,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ### Added
 
-- CI pipeline to publish package from Github.
+- CI pipeline to publish package from GitHub.
 
 ### Changed
 
