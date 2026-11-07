@@ -3,7 +3,7 @@
 # Note: This Dockerfile is based on Microsoft VS Code dev container templates.
 #       See https://github.com/microsoft/devcontainers for the originals.
 
-FROM docker.io/emscripten/emsdk:6.0.9
+FROM docker.io/emscripten/emsdk:6.0.13
 
 # Avoid warnings by switching to noninteractive
 ENV DEBIAN_FRONTEND=noninteractive

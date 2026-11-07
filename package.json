@@ -5,6 +5,9 @@
   "directories": {
     "test": "test"
   },
+  "overrides": {
+    "brace-expansion@^1.1.7": "^1.1.21"
+  },
   "scripts": {
     "test": "NODE_NO_WARNINGS=1 NODE_OPTIONS=--experimental-vm-modules jest",
     "test:debug": "NODE_OPTIONS=--experimental-vm-modules jest --runInBand",
@@ -45,7 +48,7 @@
     "@eslint/markdown": "^6.2.1",
     "eslint": "^9.17.0",
     "globals": "^15.14.0",
-    "jest": "^30.4.2",
+    "jest": "^30.5.2",
     "js-yaml": "^4.3.1"
   }
 }
