@@ -6,8 +6,8 @@
     "test": "test"
   },
   "overrides": {
-    "brace-expansion": ">=1.1.21"
-  },  
+    "brace-expansion@^1.1.7": "^1.1.21"
+  },
   "scripts": {
     "test": "NODE_NO_WARNINGS=1 NODE_OPTIONS=--experimental-vm-modules jest",
     "test:debug": "NODE_OPTIONS=--experimental-vm-modules jest --runInBand",
